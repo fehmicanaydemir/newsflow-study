@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NewsFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f0f0f;--paper:#f5f0e8;--cream:#ede8dc;--rule:#c8bfa8;--accent:#c0392b;--muted:#7a7060;--cf-bg:#fdf6e3;--cf-border:#e8c84a;--remove-bg:#fff0ee;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+.masthead{background:var(--ink);color:var(--paper);text-align:center;padding:18px 24px 14px;border-bottom:4px double var(--rule);position:sticky;top:0;z-index:100;}
+.masthead-date{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--rule);margin-bottom:6px;}
+.masthead-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:900;letter-spacing:-.02em;line-height:1;}
+.masthead-title span{color:#e8c84a;}
+.masthead-tagline{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-top:6px;}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:0;max-width:1200px;margin:0 auto;min-height:calc(100vh - 90px);}
+.sidebar{border-right:1px solid var(--rule);padding:24px 20px;background:var(--cream);}
+.sidebar-section-title{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:16px;font-weight:500;}
+.history-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule);transition:opacity .3s;}
+.history-item.removed{opacity:.35;text-decoration:line-through;}
+.history-item-cat{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:500;white-space:nowrap;padding-top:2px;min-width:54px;}
+.history-item-title{font-size:12px;line-height:1.4;color:var(--ink);flex:1;}
+.remove-btn{background:none;border:1px solid var(--rule);border-radius:3px;color:var(--muted);font-size:11px;cursor:pointer;padding:2px 6px;transition:all .2s;white-space:nowrap;}
+.remove-btn:hover{background:var(--remove-bg);border-color:var(--accent);color:var(--accent);}
+.restore-btn{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;margin-top:12px;display:block;}
+.restore-btn:hover{color:var(--ink);}
+.feed{padding:28px 32px;}
+.feed-header{display:flex;align-items:baseline;gap:16px;margin-bottom:24px;border-bottom:2px solid var(--ink);padding-bottom:12px;}
+.feed-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.feed-subtitle{font-size:12px;color:var(--muted);letter-spacing:.05em;}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.article-card{background:var(--paper);padding:20px;cursor:pointer;transition:background .2s;position:relative;}
+.article-card:hover{background:var(--cream);}
+.article-number{font-size:11px;color:var(--rule);font-weight:500;margin-bottom:8px;font-family:'Playfair Display',serif;}
+.article-cat{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;}
+.article-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.35;margin-bottom:10px;}
+.article-abstract{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.read-btn{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:4px 12px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.read-btn:hover{background:var(--ink);color:var(--paper);}
+.cf-panel{margin-top:14px;background:var(--cf-bg);border-left:3px solid var(--cf-border);padding:12px 14px;border-radius:0 4px 4px 0;display:none;}
+.cf-panel.visible{display:block;}
+.cf-panel-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#8a7a30;font-weight:600;margin-bottom:8px;}
+.cf-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:12px;line-height:1.4;}
+.cf-icon{font-size:14px;flex-shrink:0;}
+.cf-text{color:var(--ink);}
+.cf-text strong{color:var(--accent);}
+.cf-empty{font-size:12px;color:var(--muted);font-style:italic;}
+.loading-overlay{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
+.loading-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;}
+.loading-title span{color:#e8c84a;}
+.loading-dots span{display:inline-block;width:8px;height:8px;background:var(--ink);border-radius:50%;margin:0 3px;animation:bounce 1.2s infinite;}
+.loading-dots span:nth-child(2){animation-delay:.2s;}
+.loading-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-10px);}}
+.condition-badge{position:fixed;bottom:16px;right:16px;background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;border-radius:2px;opacity:.6;}
+.toast{position:fixed;bottom:60px;right:16px;background:var(--ink);color:var(--paper);font-size:12px;padding:10px 16px;border-radius:3px;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.update-bar{background:#e8c84a;color:var(--ink);text-align:center;font-size:12px;padding:8px;font-weight:500;display:none;cursor:pointer;letter-spacing:.05em;}
+.update-bar.visible{display:block;}
+.sidebar-hint{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
+.cat-tab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--rule);background:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;border-radius:2px;color:var(--muted);}
+.cat-tab:hover{border-color:var(--ink);color:var(--ink);}
+.cat-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.badge-foryou{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 7px;border-radius:2px;font-weight:600;margin-bottom:8px;}
+.badge-new{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:#2ecc71;color:white;padding:2px 7px;border-radius:2px;font-weight:600;margin-bottom:8px;margin-left:4px;}
+@media(max-width:700px){.layout{grid-template-columns:1fr;}.sidebar{border-right:none;border-bottom:1px solid var(--rule);}.feed{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loading">
+  <div class="loading-title">News<span>Flow</span></div>
+  <p style="color:var(--muted);font-size:13px;letter-spacing:.1em">Personalising your feed…</p>
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+</div>
+<header class="masthead">
+  <div class="masthead-date" id="masthead-date"></div>
+  <div class="masthead-title">News<span>Flow</span></div>
+  <div class="masthead-tagline">Your personalised daily briefing</div>
+</header>
+<div class="update-bar" id="update-bar" onclick="refreshFeed()">↻ Your history changed — click to refresh recommendations</div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section-title">Your Reading History</div>
+    <div id="history-list"></div>
+    <button class="restore-btn" id="restore-btn" onclick="restoreAll()" style="display:none">↺ Restore all removed articles</button>
+    <div class="sidebar-hint" id="sidebar-hint"></div>
+  </aside>
+  <main class="feed">
+    <div class="feed-header">
+      <div class="feed-title">Recommended For You</div>
+      <div class="feed-subtitle" id="feed-subtitle">Based on your reading history</div>
+    </div>
+    <div id="category-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;"></div>
+    <div class="articles-grid" id="articles-grid"></div>
+    <div id="load-more-container" style="text-align:center;margin-top:24px;display:none;">
+      <button id="load-more-btn" onclick="loadMore()" style="font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 28px;background:none;border:1px solid var(--ink);cursor:pointer;transition:all .2s;" onmouseover="this.style.background='var(--ink)';this.style.color='var(--paper)'" onmouseout="this.style.background='none';this.style.color='var(--ink)'">Load more articles ↓</button>
+    </div>
+  </main>
+</div>
+<div class="condition-badge" id="condition-badge"></div>
+<div class="toast" id="toast"></div>
+<script>
+const API="https://exemption-vineyard-widely.ngrok-free.dev";
+
+// Category to Unsplash search term mapping
+// Category → curated Unsplash photo IDs (consistent, relevant, free)
+const CAT_PHOTO_IDS = {
+  "news":          ["1504711434969-e33886168f5c","1585829365295-ab7a85e22e20","1517245386807-bb43f82c33c4"],
+  "sports":        ["1461896836934-ffe607ba8211","1579952363873-27f3bade9f55","1560272564-d83cfc4e40c0"],
+  "travel":        ["1488085061851-e8f57fac5b4a","1476514525535-07fb3b4ae5f1","1502920514313-52581002a659"],
+  "autos":         ["1494976388531-d1058494cdd8","1503376780353-7e6692767b70","1555215695-3004980ad54e"],
+  "tv":            ["1522869635100-9f4c5e86aa37","1585951237318-9516cf9d4b7b","1611162617213-7d7a39e9b1d7"],
+  "music":         ["1511671782779-c97d3d27a1d4","1493225457124-a3eb161ffa5f","1514320291840-2e0a9bf2a9ae"],
+  "health":        ["1505751172876-fa1923c5c528","1559757148-5c350d0d3c56","1576091160399-112ba8d25d1d"],
+  "finance":       ["1611974789855-9c02a680be0c","1579621970795-87facc2f976d","1565514020179-026b92b84bb6"],
+  "food":          ["1504674900247-0877df9cc836","1512621776951-a57141f0eeea","1567620905732-2d1ec7ab7445"],
+  "technology":    ["1518770660439-4636190af475","1531297484001-80022131f5a1","1488590528505-98d2b5aba04b"],
+  "weather":       ["1504253163759-acabd2135f45","1561553873-e0891b523e71","1516912481800-4e842d10e438"],
+  "lifestyle":     ["1511988617509-a57c8a288659","1490730141103-04e47f300787","1506126279646-a697353d3166"],
+  "entertainment": ["1489599849927-2ee91cede3ba","1533488765986-dfa2a9939acd","1536440136628-849c177e76a1"],
+  "video":         ["1611162616305-c69b3fa7fbe0","1536240478227-b36c8a41eadc","1574717024653-61fd2cf4d44d"],
+  "politics":      ["1541872703-74c5e44368f9","1529107386315-e1a2ed48a620","1555848962-6e79cbe46197"],
+  "crime":         ["1589578527966-fdac0f44566c","1453873531674-2151bcd01dc5","1580130775562-0ef4f1b0b234"],
+};
+
+function getImageUrl(category, articleId) {
+  const cat = category.toLowerCase();
+  const ids = CAT_PHOTO_IDS[cat] || CAT_PHOTO_IDS["news"];
+  // Pick consistently based on article ID
+  const seed = (articleId||"x").split("").reduce((a,c)=>a+c.charCodeAt(0),0);
+  const photoId = ids[seed % ids.length];
+  return `https://images.unsplash.com/photo-${photoId}?w=400&h=200&fit=crop&auto=format`;
+}
+
+// Read time estimate based on abstract length
+function readTime(abstract) {
+  if(!abstract) return "2 min read";
+  const words = abstract.split(" ").length;
+  const mins = Math.max(2, Math.round((words * 5) / 200)); // avg article ~5x abstract
+  return `${mins} min read`;
+}
+
+// Pagination state
+let currentPage = 0;
+const PAGE_SIZE = 6;
+let activeCategory = "all";
+const params=new URLSearchParams(window.location.search);
+const CONDITION=(params.get("condition")||"A").toUpperCase();
+const USER_IDX=params.get("user")?parseInt(params.get("user")):null;
+const HAS_EXPLANATION=["B","D"].includes(CONDITION);
+const HAS_CONTROL=["C","D"].includes(CONDITION);
+let sessionId=null,userIdx=null,history=[],removedIds=new Set(),recs=[],explanations={};
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  document.getElementById("masthead-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  const labels={A:"Condition A — No explanation · No control",B:"Condition B — Counterfactual explanation · No control",C:"Condition C — No explanation · With control",D:"Condition D — Counterfactual explanation · With control"};
+  if(params.get("debug")==="true"){document.getElementById("condition-badge").textContent=labels[CONDITION]||`Condition ${CONDITION}`;}else{document.getElementById("condition-badge").style.display="none";}
+  const hints={A:"These articles were recommended based on your reading history.",B:"These articles were recommended based on your reading history. See why each was recommended below.",C:"You can remove articles from your history using the ✕ button to update your recommendations.",D:"Remove articles from your history to change recommendations. See why each was recommended below."};
+  document.getElementById("sidebar-hint").textContent=hints[CONDITION]||"";
+  await startSession();
+});
+
+async function startSession(){
+  try{
+    const res=await fetch(`${API}/session/start`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({condition:CONDITION,user_idx:USER_IDX})});
+    const data=await res.json();
+    sessionId=data.session_id;userIdx=data.user_idx;history=data.history;recs=data.recommendations;explanations={};
+    // fetch explanations immediately for conditions B and D
+    if(["B","D"].includes(CONDITION)){
+      const expRes=await fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:CONDITION,user_idx:userIdx,removed_ids:[]})});
+      const expData=await expRes.json();
+      explanations=expData.explanations||{};
+    }
+    renderHistory();renderFeed();
+    document.getElementById("loading").style.display="none";
+  }catch(e){
+    document.getElementById("loading").innerHTML=`<div style="text-align:center;padding:40px"><div style="font-size:24px;font-family:'Playfair Display',serif;margin-bottom:12px">Could not connect to API</div><div style="color:var(--muted);font-size:14px">Make sure the backend is running:<br><code style="background:#eee;padding:4px 8px;border-radius:3px">uvicorn api:app --reload --port 8000</code></div></div>`;
+  }
+}
+
+async function refreshFeed(){
+  document.getElementById("update-bar").classList.remove("visible");
+  document.getElementById("feed-subtitle").textContent="Updating…";
+  const res=await fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:CONDITION,user_idx:userIdx,removed_ids:[...removedIds]})});
+  const data=await res.json();
+  recs=data.recommendations;explanations=data.explanations||{};
+  renderFeed();
+  document.getElementById("feed-subtitle").textContent=data.removed_count>0?`Based on your history (${data.removed_count} article${data.removed_count>1?"s":""} removed)`:"Based on your reading history";
+  showToast("Feed updated ✓");
+}
+
+async function logEvent(event,data={}){
+  fetch(`${API}/log`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:CONDITION,event,data})});
+}
+
+function renderHistory(){
+  const list=document.getElementById("history-list");
+  list.innerHTML="";
+  history.forEach(article=>{
+    const isRemoved=removedIds.has(article.id);
+    const div=document.createElement("div");
+    div.className="history-item"+(isRemoved?" removed":"");
+    div.id=`hist-${article.id}`;
+    const isNew=article._justRead===true;div.innerHTML=`<div class="history-item-cat">${article.category}</div><div class="history-item-title">${isNew?'<span style="display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;margin-right:5px;vertical-align:middle"></span>':''}${article.title}</div>${HAS_CONTROL?isRemoved?`<button class="remove-btn" onclick="restoreItem('${article.id}')">undo</button>`:`<button class="remove-btn" onclick="removeItem('${article.id}')">✕</button>`:""}`;
+    list.appendChild(div);
+  });
+  document.getElementById("restore-btn").style.display=removedIds.size>0&&HAS_CONTROL?"block":"none";
+}
+
+function getFilteredRecs(){
+  if(activeCategory==="all") return recs;
+  return recs.filter(r=>r.category.toLowerCase()===activeCategory);
+}
+
+function renderCategoryTabs(){
+  const tabs=document.getElementById("category-tabs");
+  if(!tabs)return;
+  const cats=["all",...new Set(recs.map(r=>r.category.toLowerCase()))];
+  tabs.innerHTML=cats.map(c=>`<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c==="all"?"All":c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join("");
+}
+
+function setCategory(cat){
+  activeCategory=cat;
+  currentPage=0;
+  renderCategoryTabs();
+  renderFeed();
+}
+
+function loadMore(){
+  currentPage++;
+  renderFeed(true);
+}
+
+function renderFeed(append=false){
+  const grid=document.getElementById("articles-grid");
+  if(!append) grid.innerHTML="";
+  renderCategoryTabs();
+
+  const filtered=getFilteredRecs();
+  if(filtered.length===0){
+    grid.innerHTML=`<div style="padding:40px;color:var(--muted);font-size:14px;grid-column:1/-1">No recommendations in this category.</div>`;
+    document.getElementById("load-more-container").style.display="none";
+    return;
+  }
+
+  const start=append?currentPage*PAGE_SIZE:0;
+  const end=start+PAGE_SIZE;
+  const pageRecs=filtered.slice(append?start:0, end);
+  const globalOffset=append?start:0;
+
+  pageRecs.forEach((article,i)=>{
+    const globalIdx=globalOffset+i;
+    const card=document.createElement("div");
+    card.className="article-card";
+    card.id=`card-${article.id}`;
+    const cf=explanations[article.id]||[];
+    const isTopRec=globalIdx<2;
+    const isNew=article._justRead===true;
+    let cfHtml="";
+    if(cf.length>0){
+      cfHtml=cf.map(item=>item.impact==="soft"
+        ? `<div class="cf-item"><span class="cf-icon">📰</span><span class="cf-text">You read similar content: <strong>"${item.article.title.substring(0,55)}…"</strong></span></div>`
+        : `<div class="cf-item"><span class="cf-icon">📰</span><span class="cf-text">If you remove <strong>"${item.article.title.substring(0,50)}…"</strong> from your history, this recommendation would disappear.</span></div>`
+      ).join("");
+    } else {
+      cfHtml=`<div class="cf-empty">This article matches your general reading interests.</div>`;
+    }
+    card.innerHTML=`
+      <div style="margin:-20px -20px 16px;overflow:hidden;height:140px;background:var(--cream);position:relative;">
+        <img src="${getImageUrl(article.category,article.id)}" alt="${article.category}" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s" onerror="this.parentElement.style.background='var(--cream)'" onload="this.style.opacity=0.88">
+      </div>
+      ${isTopRec?'<span class="badge-foryou">✦ Just for you</span>':""}
+      ${isNew?'<span class="badge-new">● Just read</span>':""}
+      <div class="article-number" style="${isTopRec||isNew?"margin-top:8px":""}">№ ${String(globalIdx+1).padStart(2,"0")}</div>
+      <div class="article-cat">${article.category}${article.subcategory?" · "+article.subcategory:""}</div>
+      <div class="article-title">${article.title}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:.05em">⏱ ${readTime(article.abstract)}</div>
+      ${article.abstract?`<div class="article-abstract">${article.abstract}</div>`:""}
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+        <button class="read-btn" onclick="markRead('${article.id}',${globalIdx})">Read article</button>
+        ${HAS_EXPLANATION?`<button class="read-btn" onclick="toggleExplanation('${article.id}')" style="border-color:var(--cf-border);color:#8a7a30">ℹ Why?</button>`:""}
+      </div>
+      ${HAS_EXPLANATION?`<div class="cf-panel" id="cf-${article.id}"><div class="cf-panel-title">💡 Why this recommendation?</div>${cfHtml}</div>`:""}
+    `;
+    grid.appendChild(card);
+  });
+
+  // Show/hide load more button
+  const loadMoreContainer=document.getElementById("load-more-container");
+  if(filtered.length>end){
+    loadMoreContainer.style.display="block";
+  } else {
+    loadMoreContainer.style.display="none";
+  }
+}
+
+function removeItem(id){removedIds.add(id);renderHistory();document.getElementById("update-bar").classList.add("visible");logEvent("history_remove",{article_id:id});}
+function restoreItem(id){removedIds.delete(id);renderHistory();if(removedIds.size>0){document.getElementById("update-bar").classList.add("visible");}else{document.getElementById("update-bar").classList.remove("visible");refreshFeed();}logEvent("history_restore",{article_id:id});}
+function restoreAll(){removedIds.clear();renderHistory();document.getElementById("update-bar").classList.remove("visible");refreshFeed();logEvent("history_restore_all",{});}
+function markRead(id, rank) {
+  const card = document.getElementById('card-' + id);
+  card.style.background = "#fffef5";
+  logEvent("article_click", {article_id: id, rank: rank + 1});
+
+  // Find the article data from recs
+  const article = recs.find(r => r.id === id);
+  if (!article) return;
+
+  // Add to history if not already there
+  const alreadyInHistory = history.some(h => h.id === id);
+  if (!alreadyInHistory) {
+    history.unshift({...article, _justRead: true}); // add to top
+    renderHistory();
+    showToast("Added to your reading history ✓");
+  }
+
+  // Find or create the expanded reading view
+  let reader = card.querySelector('.reader-view');
+  if (reader) {
+    reader.style.display = reader.style.display === 'none' ? 'block' : 'none';
+    return;
+  }
+
+  reader = document.createElement('div');
+  reader.className = 'reader-view';
+  reader.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);';
+  reader.innerHTML = `
+    <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Full Article</div>
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.3;margin-bottom:14px">${article.title}</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;letter-spacing:.05em;text-transform:uppercase">${article.category}${article.subcategory ? ' · ' + article.subcategory : ''}</div>
+    <div style="font-size:14px;line-height:1.8;color:var(--ink)">${article.abstract || 'Full article content is not available for this preview.'}</div>
+    <div style="margin-top:16px;font-size:12px;color:var(--muted);font-style:italic">This is a preview. Full article not available in study mode.</div>
+  `;
+  card.appendChild(reader);
+}
+function toggleExplanation(id){
+  const panel=document.getElementById('cf-'+id);
+  if(!panel)return;
+  panel.classList.toggle('visible');
+  const article=recs.find(r=>r.id===id);
+  logEvent('explanation_viewed',{article_id:id});
+}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2000);}
+</script>
+</body>
+</html>

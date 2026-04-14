@@ -1,0 +1,21 @@
+# Core numerics
+numpy==1.26.4
+
+# Data handling & ML
+pandas==2.2.1
+scipy==1.10.1
+scikit-learn==1.4.2
+torch==2.8.0
+optuna==4.5.0
+
+# Explainability & plotting
+shap==0.48.0
+matplotlib==3.10.5
+seaborn==0.13.2
+
+# IO, utilities, logging
+openpyxl==3.1.5
+tqdm==4.67.0
+gdown==5.2.0
+wandb==0.21.1
+ipython==9.4.0
