@@ -30,7 +30,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .feed-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
 .feed-subtitle{font-size:12px;color:var(--muted);letter-spacing:.05em;}
 .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);}
-.article-card{background:var(--paper);padding:20px;cursor:pointer;transition:background .2s;position:relative;}
+.article-card{background:var(--surface,var(--paper));border:1px solid var(--rule);border-top:none;padding:22px 24px;cursor:default;transition:box-shadow 0.25s,transform 0.25s;border-left:4px solid var(--cat-color,var(--rule));}
+.article-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.11);transform:translateY(-2px);background:var(--cream);}
+.article-cat-pill{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:2px;margin-bottom:10px;}
+.article-meta-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.article-number{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;}
+.article-readtime{font-size:11px;color:var(--muted);}
+.feed-frame{border:1px solid var(--rule);border-radius:4px;padding:16px;background:var(--paper);}
 .article-card:hover{background:var(--cream);}
 .article-number{font-size:11px;color:var(--rule);font-weight:500;margin-bottom:8px;font-family:'Playfair Display',serif;}
 .article-cat{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;}
@@ -39,6 +45,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .read-btn{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:4px 12px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .2s;}
 .read-btn:hover{background:var(--ink);color:var(--paper);}
 .cf-panel{margin-top:14px;background:var(--cf-bg);border-left:3px solid var(--cf-border);padding:12px 14px;border-radius:0 4px 4px 0;display:none;}
+.history-item.highlight{animation:histpulse 1.8s ease;}
+@keyframes histpulse{0%{background:#fff8cc;}50%{background:#fff8cc;}100%{background:transparent;}}
+.cf-item.clickable{cursor:pointer;border-radius:3px;transition:background 0.2s;}
+.cf-item.clickable:hover{background:rgba(184,157,48,0.15);}
 .cf-panel.visible{display:block;}
 .cf-panel-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#8a7a30;font-weight:600;margin-bottom:8px;}
 .cf-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:12px;line-height:1.4;}
@@ -649,7 +659,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
       <div class="feed-subtitle" id="feed-subtitle">Based on your reading history</div>
     </div>
     <div id="category-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;"></div>
-    <div class="articles-grid" id="articles-grid"></div>
+    <div id="empty-history-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:#fff8e6;border-left:4px solid #e8c84a;font-size:13px;color:#7a4f00;line-height:1.5;"><strong>Your reading history is empty.</strong> The articles below are a general mix. They are not personalised to your interests.</div>
+    <div class="feed-frame"><div class="articles-grid" id="articles-grid"></div></div>
     <div id="load-more-container" style="text-align:center;margin-top:24px;display:none;">
       <button id="load-more-btn" onclick="loadMore()" style="font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 28px;background:none;border:1px solid var(--ink);cursor:pointer;transition:all .2s;" onmouseover="this.style.background='var(--ink)';this.style.color='var(--paper)'" onmouseout="this.style.background='none';this.style.color='var(--ink)'">Load more articles ↓</button>
     </div>
@@ -768,6 +779,25 @@ function getImageUrl(category, articleId, subcategory) {
 }
 
 // Read time estimate based on abstract length
+function catStyle(category) {
+  const map = {
+    'sports':       {color:'#1a5c38', bg:'#e4f2ea', fg:'#1a5c38'},
+    'news':         {color:'#1b4f8a', bg:'#e8f0fa', fg:'#1b4f8a'},
+    'finance':      {color:'#8a6200', bg:'#fdf6e3', fg:'#8a6200'},
+    'health':       {color:'#6b1a1a', bg:'#fae8e8', fg:'#6b1a1a'},
+    'lifestyle':    {color:'#4a1a7a', bg:'#ede4f7', fg:'#4a1a7a'},
+    'travel':       {color:'#1a5c5c', bg:'#e4f7f7', fg:'#1a5c5c'},
+    'foodanddrink': {color:'#8a5c2a', bg:'#fdf0e6', fg:'#8a5c2a'},
+    'music':        {color:'#5c1a5c', bg:'#f7e4f7', fg:'#5c1a5c'},
+    'video':        {color:'#1a3a5c', bg:'#e4edf7', fg:'#1a3a5c'},
+    'tv':           {color:'#3a1a5c', bg:'#ede4f7', fg:'#3a1a5c'},
+    'autos':        {color:'#6a6a30', bg:'#f8f8ec', fg:'#6a6a30'},
+    'weather':      {color:'#2a6a80', bg:'#edf6fa', fg:'#2a6a80'},
+  };
+  const key = (category||'').toLowerCase().replace(/[^a-z]/g,'');
+  return map[key] || {color:'#888', bg:'#f0ede4', fg:'#555'};
+}
+
 function readTime(abstract) {
   if(!abstract) return "2 min read";
   const words = abstract.split(" ").length;
@@ -913,6 +943,8 @@ function renderFeed(append=false){
     const globalIdx=globalOffset+i;
     const card=document.createElement("div");
     card.className="article-card";
+    const cs = catStyle(article.category);
+    card.style.setProperty('--cat-color', cs.color);
     card.id=`card-${article.id}`;
     const cf=explanations[article.id]||[];
     const isTopRec=globalIdx<2;
@@ -961,15 +993,14 @@ function renderFeed(append=false){
       cfHtml=`<div class="cf-empty">This article matches your general reading interests.</div>`;
     }
     card.innerHTML=`
-      <div style="margin:-20px -20px 16px;overflow:hidden;height:140px;background:var(--cream);position:relative;">
-        <img src="${getImageUrl(article.category,article.id,article.subcategory)}" alt="${article.category}" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s" onerror="this.parentElement.style.background='var(--cream)'" onload="this.style.opacity=0.88">
-      </div>
       ${isTopRec?'<span class="badge-foryou">✦ Just for you</span>':""}
       ${isNew?'<span class="badge-new">● Just read</span>':""}
-      <div class="article-number" style="${isTopRec||isNew?"margin-top:8px":""}">№ ${String(globalIdx+1).padStart(2,"0")}</div>
-      <div class="article-cat">${article.category}${article.subcategory?" · "+article.subcategory:""}</div>
+      <div class="article-cat-pill" style="background:${catStyle(article.category).bg};color:${catStyle(article.category).fg}">${article.category}${article.subcategory?" · "+article.subcategory:""}</div>
+      <div class="article-meta-row">
+        <span class="article-number">№ ${String(globalIdx+1).padStart(2,"0")}</span>
+        <span class="article-readtime">⏱ ${readTime(article.abstract)}</span>
+      </div>
       <div class="article-title">${article.title}</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:.05em">⏱ ${readTime(article.abstract)}</div>
       ${article.abstract?`<div class="article-abstract">${article.abstract}</div>`:""}
       <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
         <button class="read-btn" onclick="markRead('${article.id}',${globalIdx})">Read article</button>
@@ -1318,6 +1349,21 @@ function toggleWarmup(id, checked) {
     else msg.textContent = n + ' selected ✓';
   }
   if (btn) btn.disabled = n < MIN;
+}
+
+function highlightHistoryItem(articleId) {
+  // Keep cf-panel open -- do NOT close it
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebar) sidebar.scrollIntoView({behavior:'smooth', block:'nearest'});
+  const el = document.getElementById('hist-' + articleId);
+  if (el) {
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.remove('highlight');
+    void el.offsetWidth;
+    el.classList.add('highlight');
+    setTimeout(() => el.classList.remove('highlight'), 2000);
+  }
+  logEvent('cf_history_link_clicked', {article_id: articleId});
 }
 
 function submitWarmup() {
