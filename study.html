@@ -583,7 +583,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
       <div class="wizard-title">Quick warm-up</div>
       <div class="wizard-subtitle">Which of these would you normally click on? Select any that interest you.</div>
       <div class="wizard-section">
-        <div id="warmup-articles" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="warmup-articles" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;padding:12px;border:1px solid var(--rule);border-radius:4px;"></div>
         <div style="font-size:11px;color:var(--muted);margin-top:12px">Please select <strong>at least 10 articles</strong> you would genuinely read. <strong>The more you select, the more personalised and accurate your recommendations will be</strong> — aim for 15 or more if possible. <span id="warmup-count-msg" style="color:var(--accent)"></span></div>
         <button class="warmup-refresh-btn" id="warmup-refresh-btn" onclick="refreshWarmupArticles()">
           <span class="warmup-refresh-icon">&#8635;</span>
