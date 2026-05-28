@@ -547,38 +547,10 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
     </div>
 
     <!-- STEP 4: Reading style + warm-up -->
+    <!-- STEP 4: skipped - reading style moved to post-task survey -->
     <div class="wizard-step" id="step-4">
-      <div class="wizard-title">Your reading style</div>
-      <div class="wizard-subtitle">Help us personalise your feed further</div>
-      <div class="wizard-section">
-        <div class="survey-question">
-          <label class="survey-label">How would you describe your news reading style?</label>
-          <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="reading-style" value="quick"> I read quickly — headlines and abstracts</label>
-            <label class="survey-option"><input type="radio" name="reading-style" value="deep"> I read deeply — full articles on topics I care about</label>
-            <label class="survey-option"><input type="radio" name="reading-style" value="broad"> I browse broadly — a bit of everything</label>
-            <label class="survey-option"><input type="radio" name="reading-style" value="stories"> I follow specific ongoing stories</label>
-          </div>
-        </div>
-        <div class="survey-question">
-          <label class="survey-label">What kind of news do you prefer?</label>
-          <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="news-type" value="breaking"> Breaking news — what's happening right now</label>
-            <label class="survey-option"><input type="radio" name="news-type" value="analysis"> Analysis — deeper context and opinion</label>
-            <label class="survey-option"><input type="radio" name="news-type" value="features"> Features — longer stories and investigations</label>
-            <label class="survey-option"><input type="radio" name="news-type" value="mix"> Mix of everything</label>
-          </div>
-        </div>
-        <div class="survey-question">
-          <label class="survey-label">How important is it that news recommendations match your interests closely?</label>
-          <div class="likert-scale" data-q="personalization-importance" style="max-width:400px"></div>
-          <div class="likert-labels" style="max-width:400px"><span>Not important</span><span>Very important</span></div>
-        </div>
-      </div>
-      <button class="wizard-btn" onclick="submitReadingStyle()">Build My Feed →</button>
     </div>
 
-    <!-- STEP 5: Warm-up article selection -->
     <div class="wizard-step" id="step-5">
       <div class="wizard-title">Quick warm-up</div>
       <div class="wizard-subtitle">Which of these would you normally click on? Select any that interest you.</div>
@@ -1463,6 +1435,11 @@ function scrollWizardTop() {
 }
 
 function goToStep(step) {
+  // Step 4 removed -- reading style moved to post-task survey
+  if (step === 4) {
+    step = 5;
+    buildWarmupArticles();
+  }
   const curr = document.getElementById('step-' + currentWizardStep);
   if (curr) curr.classList.remove('active');
   currentWizardStep = step;
