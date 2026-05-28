@@ -46,7 +46,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .cf-text{color:var(--ink);}
 .cf-text strong{color:var(--accent);}
 .cf-empty{font-size:12px;color:var(--muted);font-style:italic;}
-.loading-overlay{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
+.loading-overlay{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:999;gap:16px;}
 .loading-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;}
 .loading-title span{color:#e8c84a;}
 .loading-dots span{display:inline-block;width:8px;height:8px;background:var(--ink);border-radius:50%;margin:0 3px;animation:bounce 1.2s infinite;}
@@ -173,16 +173,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   max-width:640px;width:100%;
   background:var(--paper);
 }
-.wizard-progress{
-  display:flex;gap:6px;margin-bottom:40px;
-}
-.wizard-progress-dot{
-  height:3px;flex:1;
-  background:var(--rule);
-  transition:background 0.3s;
-}
-.wizard-progress-dot.active{background:var(--ink);}
-.wizard-progress-dot.done{background:var(--accent);}
+
 .wizard-step{display:none;}
 .wizard-step.active{display:block;}
 .wizard-title{
@@ -356,15 +347,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
     <!-- Progress dots -->
     <!-- Progress dots -->
-    <div class="wizard-progress">
-      <div class="wizard-progress-dot active" id="dot-1"></div>
-      <div class="wizard-progress-dot" id="dot-2"></div>
-      <div class="wizard-progress-dot" id="dot-3"></div>
-      <div class="wizard-progress-dot" id="dot-4"></div>
-      <div class="wizard-progress-dot" id="dot-5"></div>
-      <div class="wizard-progress-dot" id="dot-6"></div>
-      <div class="wizard-progress-dot" id="dot-7"></div>
-    </div>
+
 
     <!-- STEP 1: Welcome + Consent -->
     <div class="wizard-step active" id="step-1">
@@ -1162,17 +1145,18 @@ function checkConsent() {
   document.getElementById('btn-1').disabled = !document.getElementById('consent-check').checked;
 }
 
+function scrollWizardTop() {
+  const wiz = document.getElementById('wizard');
+  if (wiz) wiz.scrollTop = 0;
+}
+
 function goToStep(step) {
   const curr = document.getElementById('step-' + currentWizardStep);
   if (curr) curr.classList.remove('active');
-  const currDot = document.getElementById('dot-' + currentWizardStep);
-  if (currDot) { currDot.classList.remove('active'); currDot.classList.add('done'); }
   currentWizardStep = step;
   const next = document.getElementById('step-' + step);
   if (next) next.classList.add('active');
-  const nextDot = document.getElementById('dot-' + step);
-  if (nextDot) nextDot.classList.add('active');
-  window.scrollTo(0,0);
+  scrollWizardTop();
 }
 
 // ── Step 2: Demographics ──
@@ -1392,7 +1376,7 @@ function goToPostSurvey() {
   document.getElementById('step-7').classList.add('active');
   document.getElementById('dot-6').classList.add('done');
   document.getElementById('dot-7').classList.add('active');
-  window.scrollTo(0,0);
+  scrollWizardTop();
 }
 
 // ── Likert scales ──
@@ -1440,7 +1424,7 @@ function submitPostSurvey() {
   document.getElementById('step-8').classList.add('active');
   document.getElementById('dot-7').classList.remove('active');
   document.getElementById('dot-7').classList.add('done');
-  window.scrollTo(0,0);
+  scrollWizardTop();
 }
 
 // Radio styling
