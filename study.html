@@ -504,13 +504,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
       <div class="wizard-subtitle">Which of these would you normally click on? Select any that interest you.</div>
       <div class="wizard-section">
         <div id="warmup-articles" style="display:flex;flex-direction:column;gap:8px"></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:12px">You can select multiple or none — just be honest about what you'd normally read.</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px">Please select <strong>at least 10 articles</strong> you would genuinely read. <strong>The more you select, the more personalised and accurate your recommendations will be</strong> — aim for 15 or more if possible. <span id="warmup-count-msg" style="color:var(--accent)"></span></div>
         <button class="warmup-refresh-btn" id="warmup-refresh-btn" onclick="refreshWarmupArticles()">
           <span class="warmup-refresh-icon">&#8635;</span>
           <span id="warmup-refresh-label">Show different articles (3 remaining)</span>
         </button>
       </div>
-      <button class="wizard-btn" onclick="submitWarmup()">Continue →</button>
+      <button class="wizard-btn" id="warmup-continue-btn" onclick="submitWarmup()" disabled>Continue →</button>
     </div>
 
     <!-- STEP 6: Task instructions -->
@@ -1296,19 +1296,35 @@ function refreshWarmupArticles() {
 }
 
 function toggleWarmup(id, checked) {
+  // Update selections array
   if (checked) {
     if (!warmupSelections.includes(id)) warmupSelections.push(id);
   } else {
     warmupSelections = warmupSelections.filter(x => x !== id);
   }
-  document.querySelectorAll('.warmup-card').forEach(card => {
-    const input = card.querySelector('input');
-    if (input && input.checked) card.classList.add('selected');
-    else card.classList.remove('selected');
-  });
+  window._warmupSelections = warmupSelections;
+  // Update card visual
+  const card = document.querySelector(`.warmup-card input[value="${id}"]`)?.closest('.warmup-card');
+  if (card) card.classList.toggle('selected', checked);
+
+  // Update count and enforce minimum
+  const MIN = 10;
+  const n = warmupSelections.length;
+  const msg = document.getElementById('warmup-count-msg');
+  const btn = document.getElementById('warmup-continue-btn');
+  if (msg) {
+    if (n === 0) msg.textContent = '';
+    else if (n < MIN) msg.textContent = n + ' selected. Please select at least ' + MIN;
+    else msg.textContent = n + ' selected ✓';
+  }
+  if (btn) btn.disabled = n < MIN;
 }
 
 function submitWarmup() {
+  // Capture any checked boxes not yet in warmupSelections
+  document.querySelectorAll('#warmup-articles input[type="checkbox"]:checked').forEach(cb => {
+    if (!warmupSelections.includes(cb.value)) warmupSelections.push(cb.value);
+  });
   surveyResponses.warmupSelections = warmupSelections;
   logEvent('warmup_complete', {
     selected: warmupSelections,
