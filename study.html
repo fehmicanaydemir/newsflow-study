@@ -1047,11 +1047,12 @@ async function initSession() {
 async function startSession(){
   try{
     const condition = (typeof STUDY_CONDITION !== 'undefined') ? STUDY_CONDITION : CONDITION;
-    const res=await fetch(`${API}/session/start`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({condition:condition,user_idx:USER_IDX,topics:selectedTopics||[]})});
+    const res=await fetch(`${API}/session/start`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({condition:condition,user_idx:USER_IDX,topics:selectedTopics||[],warmup_ids:warmupSelections||[]})});
     const data=await res.json();
     sessionId=data.session_id;userIdx=data.user_idx;history=data.history;recs=data.recommendations;explanations={};
     renderHistory();renderFeed();
-    document.getElementById("loading").style.display="none";
+    // Show loading for 2.5s to allow counterfactuals to generate
+    setTimeout(() => { document.getElementById("loading").style.display="none"; }, 2500);
     // Fetch explanations in background for conditions B and D
     setTimeout(async ()=>{
       if(["B","D"].includes(STUDY_CONDITION||CONDITION)){
@@ -1671,7 +1672,6 @@ function setupInstructions() {
 async function startTask() {
   document.getElementById('wizard').classList.add('hidden');
   document.getElementById('task-timer-container').style.display = 'block';
-  if (["C","D"].includes(STUDY_CONDITION)) document.getElementById('control-questions').style.display = 'block';
   taskStartTime = Date.now();
   startTaskTimer();
   await initSession();
