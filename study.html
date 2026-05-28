@@ -556,65 +556,223 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
     <div class="wizard-step" id="step-7">
       <div class="wizard-title">Almost done</div>
       <div class="wizard-subtitle">Please answer these questions about your experience</div>
+
+      <!-- READING STYLE -->
       <div class="wizard-section">
-        <div class="wizard-section-title">Trust</div>
-        <div class="survey-question"><label class="survey-label">The recommendations reflected my actual interests.</label><div class="likert-scale" data-q="trust1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">I trust this system to recommend relevant articles.</label><div class="likert-scale" data-q="trust2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">The recommendations were relevant to my interests.</label><div class="likert-scale" data-q="trust3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="wizard-section-title">About your reading habits</div>
+        <div class="survey-question">
+          <label class="survey-label">How would you describe your news reading style?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="reading-style" value="quick"> I read quickly: headlines and abstracts only</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="deep"> I read deeply: full articles on topics I care about</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="broad"> I browse broadly: a bit of everything</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="mixed"> I mix depending on the topic or my mood</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">What type of news content do you prefer most?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="news-type" value="breaking"> Mostly breaking news and current events</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="analysis"> Mostly analysis, opinion and commentary</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="features"> Mostly features, investigations and longer reads</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="nopref"> No strong preference</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">How important is it that news recommendations match your interests closely?</label>
+          <div class="likert-scale" data-q="personalization-importance" data-labels="Not important at all,Slightly important,Somewhat important,Moderately important,Quite important,Very important,Extremely important"></div>
+        </div>
       </div>
+
+      <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;border-left:3px solid var(--rule);padding-left:12px;">Please indicate how much you agree with the statements below. There are no right or wrong answers. We are interested in your honest experience.</p>
+
+      <!-- PRIMARY DVs: TRUST -->
       <div class="wizard-section">
-        <div class="wizard-section-title">Transparency</div>
-        <div class="survey-question"><label class="survey-label">I understood why the articles were recommended to me.</label><div class="likert-scale" data-q="transparency1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">The system was clear about how it makes recommendations.</label><div class="likert-scale" data-q="transparency2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">I could make sense of the recommendations I received.</label><div class="likert-scale" data-q="transparency3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="wizard-section-title">About the recommender</div>
+        <div class="survey-question"><label class="survey-label">I am confident in this news recommender.</label><div class="likert-scale" data-q="tr1" data-labels="Not at all,Slightly,Somewhat,Moderately,Quite,Very,Extremely"></div></div>
+        <div class="survey-question"><label class="survey-label">This news recommender is dependable.</label><div class="likert-scale" data-q="tr2" data-labels="Not at all,Slightly,Somewhat,Moderately,Quite,Very,Extremely"></div></div>
+        <div class="survey-question"><label class="survey-label">Please select 4 for this item.</label><div class="likert-scale" data-q="att1"></div></div>
+        <div class="survey-question"><label class="survey-label">This news recommender is reliable.</label><div class="likert-scale" data-q="tr3" data-labels="Not at all,Slightly,Somewhat,Moderately,Quite,Very,Extremely"></div></div>
+        <div class="survey-question"><label class="survey-label">This news recommender has integrity.</label><div class="likert-scale" data-q="tr4" data-labels="Not at all,Slightly,Somewhat,Moderately,Quite,Very,Extremely"></div></div>
+        <div class="survey-question"><label class="survey-label">The recommender made me more confident about my choices.</label><div class="likert-scale" data-q="tr5"></div></div>
       </div>
+
+      <!-- PRIMARY DVs: SATISFACTION -->
       <div class="wizard-section">
-        <div class="wizard-section-title">Satisfaction</div>
-        <div class="survey-question"><label class="survey-label">I am satisfied with the recommendations I received.</label><div class="likert-scale" data-q="satisfaction1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">I would use this news service in my daily life.</label><div class="likert-scale" data-q="satisfaction2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">The feed felt personalised to me.</label><div class="likert-scale" data-q="satisfaction3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="wizard-section-title">Your experience</div>
+        <div class="survey-question"><label class="survey-label">This news recommender was useful to me.</label><div class="likert-scale" data-q="ss1"></div></div>
+        <div class="survey-question"><label class="survey-label">Overall, I am satisfied with this news recommender.</label><div class="likert-scale" data-q="ss2"></div></div>
+        <div class="survey-question"><label class="survey-label">I make better reading choices with this recommender.</label><div class="likert-scale" data-q="ss3"></div></div>
+        <div class="survey-question"><label class="survey-label">Using this news recommender was a pleasant experience.</label><div class="likert-scale" data-q="ss4"></div></div>
       </div>
-      <div class="wizard-section" id="control-questions" style="display:none">
-        <div class="wizard-section-title">Control</div>
-        <div class="survey-question"><label class="survey-label">I felt in control of my recommendations.</label><div class="likert-scale" data-q="control1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">I could influence what content was shown to me.</label><div class="likert-scale" data-q="control2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">Adjusting my history changed my recommendations in a useful way.</label><div class="likert-scale" data-q="control3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-      </div>
+
+      <!-- MEDIATORS: TRANSPARENCY -->
       <div class="wizard-section">
-        <div class="wizard-section-title">Personalisation</div>
-        <div class="survey-question"><label class="survey-label">The recommendations matched the interests I selected at the start.</label><div class="likert-scale" data-q="personalization1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
-        <div class="survey-question"><label class="survey-label">I felt the system understood what kind of news I like.</label><div class="likert-scale" data-q="personalization2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="wizard-section-title">Understanding the recommendations</div>
+        <div class="survey-question"><label class="survey-label">I understood why the articles were recommended to me.</label><div class="likert-scale" data-q="t1"></div></div>
+        <div class="survey-question"><label class="survey-label">The system was clear about how it used my reading history.</label><div class="likert-scale" data-q="t2"></div></div>
+        <div class="survey-question"><label class="survey-label">The recommendation process was transparent to me.</label><div class="likert-scale" data-q="t3"></div></div>
       </div>
+
+      <!-- MEDIATORS: AGENCY -->
+      <div class="wizard-section">
+        <div class="wizard-section-title">Your influence on the feed</div>
+        <div class="survey-question"><label class="survey-label">During browsing, I had a say in what the recommender showed me.</label><div class="likert-scale" data-q="a1"></div></div>
+        <div class="survey-question"><label class="survey-label">I steered the recommendations toward my interests.</label><div class="likert-scale" data-q="a2"></div></div>
+        <div class="survey-question"><label class="survey-label">For this question, please select Strongly disagree.</label><div class="likert-scale" data-q="att2"></div></div>
+        <div class="survey-question"><label class="survey-label">My actions changed what appeared in my feed.</label><div class="likert-scale" data-q="a3"></div></div>
+        <div class="survey-question"><label class="survey-label">I shaped my own news feed.</label><div class="likert-scale" data-q="a4"></div></div>
+      </div>
+
+      <!-- MEDIATORS: PERCEIVED PERSONALISATION -->
+      <div class="wizard-section">
+        <div class="wizard-section-title">About the articles recommended to you</div>
+        <div class="survey-question"><label class="survey-label">The recommended articles fitted my preferences.</label><div class="likert-scale" data-q="pp1"></div></div>
+        <div class="survey-question"><label class="survey-label">Each of the recommended articles was relevant to my interests.</label><div class="likert-scale" data-q="pp2"></div></div>
+        <div class="survey-question"><label class="survey-label">The recommended articles matched what I was looking for.</label><div class="likert-scale" data-q="pp3"></div></div>
+        <div class="survey-question"><label class="survey-label">This recommender understands my news interests.</label><div class="likert-scale" data-q="pp4"></div></div>
+        <div class="survey-question"><label class="survey-label">This recommender knows what kind of news I want.</label><div class="likert-scale" data-q="pp5"></div></div>
+      </div>
+
+      <!-- MANIPULATION CHECKS -->
+      <div class="wizard-section">
+        <div class="wizard-section-title">A few quick questions about your browsing session</div>
+        <div class="survey-question">
+          <label class="survey-label">During the browsing phase, I saw explanations for why articles were recommended to me.</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="mc1" value="yes"> Yes</label>
+            <label class="survey-option"><input type="radio" name="mc1" value="no"> No</label>
+            <label class="survey-option"><input type="radio" name="mc1" value="notsure"> Not sure</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">During the browsing phase, I removed one or more articles from my reading history.</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="mc2" value="yes"> Yes</label>
+            <label class="survey-option"><input type="radio" name="mc2" value="no"> No</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">The initial topic selection affected what I saw in my feed.</label>
+          <div class="likert-scale" data-q="mc3"></div>
+        </div>
+      </div>
+
+      <!-- COMPREHENSION CHECKS -->
+      <div class="wizard-section" id="comp-e-block" style="display:none">
+        <div class="survey-question">
+          <label class="survey-label">According to the explanation, removing a history item would most likely:</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="comp-e" value="a"> A. Have no effect</label>
+            <label class="survey-option"><input type="radio" name="comp-e" value="b"> B. Change future recommendations related to that item</label>
+            <label class="survey-option"><input type="radio" name="comp-e" value="c"> C. Delete the recommended article</label>
+            <label class="survey-option"><input type="radio" name="comp-e" value="d"> D. Change the website layout</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-section" id="comp-c-block" style="display:none">
+        <div class="survey-question">
+          <label class="survey-label">According to the system, removing an article from your reading history would most likely:</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="comp-c" value="a"> A. Delete the article permanently from the website</label>
+            <label class="survey-option"><input type="radio" name="comp-c" value="b"> B. Change the recommendations you see in your feed</label>
+            <label class="survey-option"><input type="radio" name="comp-c" value="c"> C. Send feedback to the news editors</label>
+            <label class="survey-option"><input type="radio" name="comp-c" value="d"> D. Have no effect on your recommendations</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- COVARIATES -->
+      <div class="wizard-section">
+        <div class="wizard-section-title">A few final questions</div>
+        <div class="survey-question">
+          <label class="survey-label">Have you ever actively changed what a platform recommends to you? For example: removing a video from your YouTube watch history, telling Netflix you are not interested in a show, disliking a Spotify song to stop seeing similar ones, or adjusting your preference settings on a news app.</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="rs-control-exp" value="regularly"> Yes, I do this regularly</label>
+            <label class="survey-option"><input type="radio" name="rs-control-exp" value="sometimes"> Yes, I have done this a few times</label>
+            <label class="survey-option"><input type="radio" name="rs-control-exp" value="never"> No, I have never done this</label>
+            <label class="survey-option"><input type="radio" name="rs-control-exp" value="unaware"> I was not aware this was possible</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">I enjoy thinking in depth about complex problems.</label>
+          <div class="likert-scale" data-q="nfc1"></div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">I prefer simple explanations over detailed ones.</label>
+          <div class="likert-scale" data-q="nfc2"></div>
+        </div>
+      </div>
+
+      <!-- OPEN FEEDBACK -->
       <div class="wizard-section">
         <div class="wizard-section-title">Open feedback</div>
         <div class="survey-question">
           <label class="survey-label">Is there anything you would like to tell us about your experience? (optional)</label>
-          <textarea id="open-feedback" style="width:100%;padding:12px;border:1px solid var(--rule);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;background:var(--paper);color:var(--ink)" placeholder="Your thoughts..."></textarea>
+          <textarea id="open-feedback" style="width:100%;padding:12px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:13px;resize:vertical;min-height:80px;background:var(--paper);color:var(--ink)" placeholder="Your thoughts..."></textarea>
         </div>
       </div>
       <button class="wizard-btn" onclick="submitPostSurvey()">Submit →</button>
     </div>
 
-    <!-- STEP 8: Debrief -->
+<!-- STEP 8: Debrief -->
     <div class="wizard-step" id="step-8">
-      <div class="wizard-title">Thank you! 🎉</div>
-      <div class="wizard-subtitle">Your responses have been recorded</div>
+      <div class="wizard-title">Before we finish</div>
+      <div class="wizard-subtitle">Please read the following carefully</div>
       <div class="wizard-section">
-        <div class="wizard-section-title">About this study</div>
-        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">
-          This study investigated how different types of explanations and user controls affect trust,
-          transparency, and satisfaction with news recommendation systems.
+        <div class="wizard-section-title">What this study was really about</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:12px">
+          This study investigated how <strong style="color:var(--ink)">explanations</strong> and
+          <strong style="color:var(--ink)">user control</strong> in news recommendation systems affect
+          perceived transparency, perceived agency, trust, and satisfaction.
         </p>
-        <div class="debrief-condition" id="debrief-condition-text"></div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:12px">
+          The study used a <strong style="color:var(--ink)">2x2 experimental design</strong> with four
+          versions of the news feed differing in whether explanations and history control were present.
+          You were randomly assigned to one of these versions. We could not tell you this beforehand
+          because knowing the purpose might have influenced your responses.
+        </p>
+        <div id="debrief-condition-text" style="background:var(--cream);border-left:3px solid var(--accent);padding:12px 16px;font-size:13px;line-height:1.6;color:var(--ink);margin-bottom:12px;"></div>
         <p style="font-size:13px;line-height:1.8;color:var(--muted)">
           Your participation helps us understand how to design more transparent and trustworthy
-          AI-powered news systems. Thank you for contributing to this research.
+          AI-powered news systems. This research is part of a Research-in-Action course and MSc thesis
+          project at JADS, TU/e and Tilburg University.
         </p>
       </div>
       <div class="wizard-section">
+        <div class="wizard-section-title">Retrospective consent</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">
+          Now that you know the full purpose of this study, we ask for your consent to use your responses
+          in our research. You are free to withdraw your data — this will have no negative consequences for you.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="wizard-btn" onclick="giveRetroConsent()" style="background:var(--ink);flex:1;min-width:160px">Yes, you may use my data</button>
+          <button class="wizard-btn" onclick="withdrawRetroConsent()" style="background:#c0392b;flex:1;min-width:160px">No, please delete my data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 9: Completion -->
+    <div class="wizard-step" id="step-9">
+      <div class="wizard-title">Thank you! 🎉</div>
+      <div class="wizard-subtitle">Your responses have been recorded</div>
+      <div class="wizard-section">
         <div class="wizard-section-title">Your completion code</div>
         <div class="completion-code" id="completion-code"></div>
-        <p style="font-size:12px;color:var(--muted);text-align:center">Please save this code as proof of participation.</p>
+        <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">Please save this code as proof of participation.</p>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('completion-code').textContent).then(()=>this.textContent='Copied!')" style="display:block;margin:12px auto 0;font-family:'Roboto',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 20px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;">Copy Code</button>
+      </div>
+    </div>
+
+    <!-- STEP 10: Data withdrawn -->
+    <div class="wizard-step" id="step-10">
+      <div class="wizard-title">Data deleted</div>
+      <div class="wizard-subtitle">Your responses have been removed</div>
+      <div class="wizard-section">
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);text-align:center">
+          Your data has been deleted and will not be used in this research. Thank you for your time.
+        </p>
       </div>
     </div>
 
@@ -1176,6 +1334,57 @@ function checkConsent() {
   document.getElementById('btn-1').disabled = !document.getElementById('consent-check').checked;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => buildLikertScales(), 100);
+});
+
+function showDebrief() {
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  currentWizardStep = 8;
+  document.getElementById('step-8').classList.add('active');
+  scrollWizardTop();
+  const debriefTexts = {
+    A: "You were in the <strong>baseline condition</strong>: you browsed a personalised news feed without explanations or history controls. This helps us understand the default user experience as a comparison point.",
+    B: "You were in the <strong>explanation condition</strong>: you could see why each article was recommended using counterfactual explanations (the Why? button). This helps us understand how explanations affect trust and transparency.",
+    C: "You were in the <strong>control condition</strong>: you could remove articles from your reading history to change your recommendations. This helps us understand how user control affects perceived agency and satisfaction.",
+    D: "You were in the <strong>explanation and control condition</strong>: you had both counterfactual explanations and history control. This helps us understand the combined effect of transparency and agency on trust and satisfaction."
+  };
+  const el = document.getElementById('debrief-condition-text');
+  if (el) el.innerHTML = debriefTexts[STUDY_CONDITION] || '';
+}
+
+async function giveRetroConsent() {
+  logEvent('retro_consent', {decision: 'accepted', condition: STUDY_CONDITION});
+  try {
+    await fetch(`${API}/submit`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true'},
+      body: JSON.stringify({session_id: sessionId, condition: STUDY_CONDITION, responses: surveyResponses})
+    });
+  } catch(e) { console.error('Submit error:', e); }
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  currentWizardStep = 9;
+  document.getElementById('step-9').classList.add('active');
+  const code = 'NF-' + STUDY_CONDITION + '-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('completion-code').textContent = code;
+  scrollWizardTop();
+}
+
+async function withdrawRetroConsent() {
+  logEvent('retro_consent', {decision: 'withdrawn', condition: STUDY_CONDITION});
+  try {
+    await fetch(`${API}/session/delete`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true'},
+      body: JSON.stringify({session_id: sessionId})
+    });
+  } catch(e) { console.error('Delete error:', e); }
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  currentWizardStep = 10;
+  document.getElementById('step-10').classList.add('active');
+  scrollWizardTop();
+}
+
 function scrollWizardTop() {
   const wiz = document.getElementById('wizard');
   if (wiz) wiz.scrollTop = 0;
@@ -1426,19 +1635,24 @@ function startTaskTimer() {
   }, 1000);
 }
 
+function setupSurveyBlocks() {
+  const compE = document.getElementById('comp-e-block');
+  const compC = document.getElementById('comp-c-block');
+  if (compE) compE.style.display = ['B','D'].includes(STUDY_CONDITION) ? 'block' : 'none';
+  if (compC) compC.style.display = ['C','D'].includes(STUDY_CONDITION) ? 'block' : 'none';
+}
+
 function goToPostSurvey() {
+  setupSurveyBlocks();
   const timeSpent = Math.round((Date.now() - taskStartTime) / 1000);
   logEvent('task_complete', {seconds: timeSpent});
   document.getElementById('task-timer-container').style.display = 'none';
   document.getElementById('wizard').classList.remove('hidden');
-  buildLikertScales();
-  const curr = document.getElementById('step-' + currentWizardStep);
-  if (curr) curr.classList.remove('active');
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
   currentWizardStep = 7;
   document.getElementById('step-7').classList.add('active');
-  document.getElementById('dot-6').classList.add('done');
-  document.getElementById('dot-7').classList.add('active');
   scrollWizardTop();
+  setTimeout(() => buildLikertScales(), 50);
 }
 
 // ── Likert scales ──
@@ -1465,28 +1679,42 @@ function buildLikertScales() {
 
 // ── Post-survey ──
 function submitPostSurvey() {
-  const required = ['trust1','trust2','trust3','transparency1','transparency2','transparency3','satisfaction1','satisfaction2','satisfaction3','personalization1','personalization2'];
-  if (["C","D"].includes(STUDY_CONDITION)) required.push('control1','control2','control3');
-  const missing = required.filter(q => !surveyResponses[q]);
-  if (missing.length > 0) { alert('Please answer all questions before submitting.'); return; }
-  surveyResponses.feedback  = document.getElementById('open-feedback').value;
-  surveyResponses.condition = STUDY_CONDITION;
-  logEvent('post_survey', surveyResponses);
-  const code = 'NF-' + (sessionId||'XXXX').toUpperCase() + '-' + STUDY_CONDITION;
-  document.getElementById('completion-code').textContent = code;
-  const debriefs = {
-    A: "You were in the baseline condition — recommendations without explanations or controls. This helps us understand the default user experience.",
-    B: "You were in the explanation condition — you could see why each article was recommended using counterfactual explanations. This helps us understand how explanations affect trust.",
-    C: "You were in the control condition — you could remove articles from your history to change recommendations. This helps us understand how control affects satisfaction.",
-    D: "You were in the full condition — both counterfactual explanations and history control. This helps us understand the combined effect of transparency and agency."
+  const sq = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+  const lq = (id) => { return surveyResponses[id] ? String(surveyResponses[id]) : null; };
+
+  surveyResponses.postSurvey = {
+    readingStyle: sq('reading-style'), newsType: sq('news-type'),
+    personalizationImportance: lq('personalization-importance'),
+    tr1: lq('tr1'), tr2: lq('tr2'), tr3: lq('tr3'), tr4: lq('tr4'), tr5: lq('tr5'),
+    ss1: lq('ss1'), ss2: lq('ss2'), ss3: lq('ss3'), ss4: lq('ss4'),
+    t1: lq('t1'), t2: lq('t2'), t3: lq('t3'),
+    a1: lq('a1'), a2: lq('a2'), a3: lq('a3'), a4: lq('a4'),
+    pp1: lq('pp1'), pp2: lq('pp2'), pp3: lq('pp3'), pp4: lq('pp4'), pp5: lq('pp5'),
+    mc1: sq('mc1'), mc2: sq('mc2'), mc3: lq('mc3'),
+    compE: sq('comp-e'), compC: sq('comp-c'),
+    att1: lq('att1'), att2: lq('att2'),
+    rsControlExp: sq('rs-control-exp'),
+    nfc1: lq('nfc1'), nfc2: lq('nfc2'),
+    feedback: document.getElementById('open-feedback')?.value || ''
   };
-  document.getElementById('debrief-condition-text').textContent = debriefs[STUDY_CONDITION];
-  const curr = document.getElementById('step-7');
-  if (curr) curr.classList.remove('active');
-  document.getElementById('step-8').classList.add('active');
-  document.getElementById('dot-7').classList.remove('active');
-  document.getElementById('dot-7').classList.add('done');
-  scrollWizardTop();
+
+  // Validate required Likert items
+  const requiredLikert = ['tr1','tr2','tr3','tr4','tr5','ss1','ss2','ss3','ss4',
+    't1','t2','t3','a1','a2','a3','a4','pp1','pp2','pp3','pp4','pp5','mc3','nfc1','nfc2'];
+  const missingLikert = requiredLikert.filter(q => !surveyResponses.postSurvey[q]);
+
+  const requiredRadio = ['reading-style','news-type','mc1','mc2','rs-control-exp'];
+  const missingRadio = requiredRadio.filter(name =>
+    !document.querySelector(`input[name="${name}"]:checked`));
+
+  if (missingLikert.length > 0 || missingRadio.length > 0) {
+    alert('Please answer all questions before submitting.');
+    console.log('Missing Likert:', missingLikert, 'Missing radio:', missingRadio);
+    return;
+  }
+
+  logEvent('survey_complete', surveyResponses.postSurvey);
+  showDebrief();
 }
 
 // Radio styling
