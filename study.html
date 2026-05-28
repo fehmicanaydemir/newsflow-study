@@ -476,14 +476,11 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
       <div class="wizard-section">
         <div class="survey-question">
           <label class="survey-label">What is your age?</label>
-          <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="age" value="18-24"> 18–24</label>
-            <label class="survey-option"><input type="radio" name="age" value="25-34"> 25–34</label>
-            <label class="survey-option"><input type="radio" name="age" value="35-44"> 35–44</label>
-            <label class="survey-option"><input type="radio" name="age" value="45-54"> 45–54</label>
-            <label class="survey-option"><input type="radio" name="age" value="55+"> 55 or older</label>
-            <label class="survey-option"><input type="radio" name="age" value="prefer-not"> Prefer not to say</label>
-          </div>
+          <select name="age" id="age-select" style="width:100%;padding:10px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:13px;background:var(--paper);color:var(--ink);margin-top:4px">
+            <option value="">Select your age</option>
+            <option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><option value="60">60</option><option value="61">61</option><option value="62">62</option><option value="63">63</option><option value="64">64</option><option value="65">65</option><option value="66">66</option><option value="67">67</option><option value="68">68</option><option value="69">69</option><option value="70">70</option><option value="71">71</option><option value="72">72</option><option value="73">73</option><option value="74">74</option><option value="75">75</option><option value="76">76</option><option value="77">77</option><option value="78">78</option><option value="79">79</option><option value="80">80</option><option value="81">81</option><option value="82">82</option><option value="83">83</option><option value="84">84</option><option value="85">85</option><option value="86">86</option><option value="87">87</option><option value="88">88</option><option value="89">89</option><option value="90">90</option><option value="91">91</option><option value="92">92</option><option value="93">93</option><option value="94">94</option><option value="95">95</option><option value="96">96</option><option value="97">97</option><option value="98">98</option><option value="99">99</option>
+            <option value="prefer-not">Prefer not to say</option>
+          </select>
         </div>
         <div class="survey-question">
           <label class="survey-label">What is your gender?</label>
@@ -491,17 +488,20 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
             <label class="survey-option"><input type="radio" name="gender" value="male"> Male</label>
             <label class="survey-option"><input type="radio" name="gender" value="female"> Female</label>
             <label class="survey-option"><input type="radio" name="gender" value="nonbinary"> Non-binary</label>
+            <label class="survey-option"><input type="radio" name="gender" value="other-gender"> Other: <input type="text" id="gender-other-text" placeholder="please specify" style="border:none;border-bottom:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:13px;width:140px;margin-left:4px;background:transparent"></label>
             <label class="survey-option"><input type="radio" name="gender" value="prefer-not"> Prefer not to say</label>
           </div>
         </div>
         <div class="survey-question">
-          <label class="survey-label">What is your highest level of education?</label>
+          <label class="survey-label">What is your highest level of education? <span style="font-size:11px;color:var(--muted)">(EQF level)</span></label>
           <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="education" value="highschool"> High school</label>
-            <label class="survey-option"><input type="radio" name="education" value="bachelor"> Bachelor's degree</label>
-            <label class="survey-option"><input type="radio" name="education" value="master"> Master's degree</label>
-            <label class="survey-option"><input type="radio" name="education" value="phd"> PhD or higher</label>
-            <label class="survey-option"><input type="radio" name="education" value="other"> Other</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf2"> EQF 2 &mdash; Lower secondary education (e.g. VMBO, GCSE)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf3"> EQF 3 &mdash; Upper secondary education (e.g. MBO 2/3, A-levels)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf4"> EQF 4 &mdash; Post-secondary / vocational (e.g. MBO 4, HAVO/VWO)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf5"> EQF 5 &mdash; Short-cycle higher education (e.g. HBO associate degree)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf6"> EQF 6 &mdash; Bachelor's degree (e.g. HBO, WO Bachelor)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf7"> EQF 7 &mdash; Master's degree (e.g. WO Master, MSc, MA)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf8"> EQF 8 &mdash; Doctoral degree (PhD)</label>
           </div>
         </div>
         <div class="survey-question">
@@ -516,13 +516,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
         </div>
         <div class="survey-question">
           <label class="survey-label">How familiar are you with how news recommendation systems work?</label>
-          <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="familiarity" value="1"> Not familiar at all</label>
-            <label class="survey-option"><input type="radio" name="familiarity" value="2"> Slightly familiar</label>
-            <label class="survey-option"><input type="radio" name="familiarity" value="3"> Moderately familiar</label>
-            <label class="survey-option"><input type="radio" name="familiarity" value="4"> Very familiar</label>
-            <label class="survey-option"><input type="radio" name="familiarity" value="5"> Extremely familiar</label>
-          </div>
+          <div class="likert-scale" data-q="familiarity" data-labels="Not familiar at all,Slightly familiar,Somewhat familiar,Moderately familiar,Quite familiar,Very familiar,Extremely familiar"></div>
         </div>
       </div>
       <button class="wizard-btn" onclick="submitDemographics()">Continue →</button>
@@ -1479,14 +1473,29 @@ function goToStep(step) {
 
 // ── Step 2: Demographics ──
 function submitDemographics() {
-  const fields = ['age','gender','education','news-freq','familiarity'];
   const responses = {};
   let allAnswered = true;
-  fields.forEach(f => {
+
+  // Age from dropdown
+  const ageEl = document.getElementById('age-select');
+  if (ageEl && ageEl.value) responses['age'] = ageEl.value;
+  else allAnswered = false;
+
+  // Radio fields
+  ['gender','education','news-freq'].forEach(f => {
     const checked = document.querySelector('input[name="' + f + '"]:checked');
-    if (checked) responses[f] = checked.value;
-    else allAnswered = false;
+    if (checked) {
+      responses[f] = checked.value;
+      if (checked.value === 'other-gender') {
+        responses['gender-other'] = document.getElementById('gender-other-text')?.value || '';
+      }
+    } else allAnswered = false;
   });
+
+  // Familiarity from Likert
+  if (surveyResponses['familiarity']) responses['familiarity'] = surveyResponses['familiarity'];
+  else allAnswered = false;
+
   if (!allAnswered) { alert('Please answer all questions before continuing.'); return; }
   surveyResponses.demographics = responses;
   goToStep(3);
