@@ -64,11 +64,585 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .cat-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 .badge-foryou{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 7px;border-radius:2px;font-weight:600;margin-bottom:8px;}
 .badge-new{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:#2ecc71;color:white;padding:2px 7px;border-radius:2px;font-weight:600;margin-bottom:8px;margin-left:4px;}
+/* ── Article Modal ── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,15,15,0.75);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{
+  background:var(--paper);
+  max-width:680px;width:90%;
+  max-height:85vh;
+  overflow-y:auto;
+  padding:40px;
+  position:relative;
+  border:1px solid var(--rule);
+  transform:translateY(20px);
+  transition:transform 0.3s;
+  scrollbar-width:thin;
+}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-close{
+  position:sticky;top:0;float:right;
+  background:var(--ink);color:var(--paper);
+  border:none;cursor:pointer;
+  font-size:14px;padding:6px 14px;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:.05em;
+  margin-bottom:16px;
+  z-index:10;
+}
+.modal-close:hover{background:#333;}
+.modal-category{
+  font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--accent);
+  font-weight:600;margin-bottom:12px;
+}
+.modal-title{
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:700;
+  line-height:1.3;margin-bottom:16px;
+}
+.modal-meta{
+  font-size:11px;color:var(--muted);
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--rule);
+  letter-spacing:.05em;
+}
+.modal-body{
+  font-size:15px;line-height:1.9;
+  color:var(--ink);
+}
+.modal-body p{margin-bottom:1.4em;}
+.modal-reading-time{
+  display:inline-block;
+  background:var(--cream);
+  font-size:11px;padding:4px 10px;
+  border-radius:2px;margin-left:12px;
+  color:var(--muted);
+}
+
+
+.topic-card{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:16px 8px;border:1px solid var(--rule);
+  cursor:pointer;transition:all 0.2s;text-align:center;
+  user-select:none;
+}
+.topic-card:hover{border-color:var(--ink);background:var(--cream);}
+.topic-card.selected{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.topic-card.selected .topic-icon{filter:grayscale(0);}
+.topic-icon{font-size:24px;line-height:1;}
+.topic-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
+.warmup-card{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;border:1px solid var(--rule);
+  cursor:pointer;transition:all 0.2s;
+}
+.warmup-card:hover{border-color:var(--ink);background:var(--cream);}
+.warmup-card.selected{border-color:var(--ink);background:var(--cream);}
+.warmup-card input{margin-top:3px;flex-shrink:0;}
+.warmup-card-content{flex:1;}
+.warmup-cat{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px;}
+.warmup-title{font-size:13px;font-family:'Playfair Display',serif;font-weight:700;line-height:1.3;}
+.warmup-refresh-btn{display:flex;align-items:center;gap:6px;margin-top:16px;padding:8px 14px;border:1px solid var(--rule);background:none;font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.warmup-refresh-btn:hover:not(:disabled){border-color:var(--ink);color:var(--ink);}
+.warmup-refresh-btn:disabled{opacity:0.38;cursor:not-allowed;}
+.warmup-refresh-icon{font-size:14px;transition:transform 0.4s;}
+.warmup-refresh-btn:not(:disabled):hover .warmup-refresh-icon{transform:rotate(180deg);}
+
+/* ── Study Wizard ── */
+.wizard-overlay{
+  position:fixed;inset:0;
+  background:var(--paper);
+  z-index:800;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 20px;
+  overflow-y:auto;
+}
+.wizard-overlay.hidden{display:none;}
+.wizard-box{
+  max-width:640px;width:100%;
+  background:var(--paper);
+}
+.wizard-progress{
+  display:flex;gap:6px;margin-bottom:40px;
+}
+.wizard-progress-dot{
+  height:3px;flex:1;
+  background:var(--rule);
+  transition:background 0.3s;
+}
+.wizard-progress-dot.active{background:var(--ink);}
+.wizard-progress-dot.done{background:var(--accent);}
+.wizard-step{display:none;}
+.wizard-step.active{display:block;}
+.wizard-title{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:900;
+  line-height:1.2;margin-bottom:8px;
+}
+.wizard-subtitle{
+  font-size:13px;color:var(--muted);
+  margin-bottom:32px;
+  letter-spacing:0.05em;
+}
+.wizard-section{
+  border-top:1px solid var(--rule);
+  padding:20px 0;
+}
+.wizard-section-title{
+  font-size:10px;letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+  margin-bottom:16px;
+}
+.wizard-btn{
+  display:inline-block;
+  background:var(--ink);color:var(--paper);
+  border:none;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:14px 32px;
+  margin-top:24px;
+  transition:background 0.2s;
+}
+.wizard-btn:hover{background:#333;}
+.wizard-btn:disabled{background:var(--rule);cursor:not-allowed;}
+.wizard-btn-secondary{
+  background:none;color:var(--ink);
+  border:1px solid var(--rule);
+  margin-left:12px;
+}
+.wizard-btn-secondary:hover{border-color:var(--ink);}
+
+/* Survey elements */
+.survey-question{margin-bottom:28px;}
+.survey-label{
+  font-size:14px;font-weight:500;
+  margin-bottom:12px;display:block;
+  line-height:1.5;
+}
+.survey-options{display:flex;flex-direction:column;gap:8px;}
+.survey-option{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  border:1px solid var(--rule);
+  cursor:pointer;
+  transition:all 0.2s;
+  font-size:13px;
+}
+.survey-option:hover{border-color:var(--ink);background:var(--cream);}
+.survey-option input{margin:0;}
+.survey-option.selected{
+  border-color:var(--ink);
+  background:var(--cream);
+}
+
+/* Likert scale */
+.likert-scale{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;margin-top:8px;
+}
+.likert-btn{
+  display:flex;flex-direction:column;
+  align-items:center;gap:6px;
+  padding:10px 4px;
+  border:1px solid var(--rule);
+  cursor:pointer;
+  font-size:11px;color:var(--muted);
+  transition:all 0.2s;
+  background:none;
+  font-family:'DM Sans',sans-serif;
+}
+.likert-btn:hover{border-color:var(--ink);color:var(--ink);}
+.likert-btn.selected{
+  background:var(--ink);color:var(--paper);
+  border-color:var(--ink);
+}
+.likert-btn span{font-size:16px;font-weight:700;}
+.likert-labels{
+  display:flex;justify-content:space-between;
+  font-size:10px;color:var(--muted);
+  margin-top:4px;letter-spacing:0.05em;
+}
+
+/* Consent box */
+.consent-box{
+  background:var(--cream);
+  border:1px solid var(--rule);
+  padding:20px;
+  font-size:13px;
+  line-height:1.8;
+  color:var(--muted);
+  max-height:200px;
+  overflow-y:auto;
+  margin-bottom:20px;
+}
+.consent-agree{
+  display:flex;align-items:flex-start;
+  gap:12px;font-size:13px;cursor:pointer;
+}
+.consent-agree input{margin-top:3px;flex-shrink:0;}
+
+/* Task instructions */
+.instruction-card{
+  border:1px solid var(--rule);
+  padding:16px 20px;
+  margin-bottom:12px;
+  display:flex;gap:16px;
+  align-items:flex-start;
+}
+.instruction-number{
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:900;
+  color:var(--rule);flex-shrink:0;
+  line-height:1;
+}
+.instruction-text{font-size:13px;line-height:1.6;}
+
+/* Timer */
+.timer-bar{
+  height:3px;background:var(--rule);
+  margin-bottom:8px;overflow:hidden;
+}
+.timer-fill{
+  height:100%;background:var(--accent);
+  width:0%;transition:width 1s linear;
+}
+.timer-text{
+  font-size:11px;color:var(--muted);
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+/* Debrief */
+.debrief-condition{
+  background:var(--cream);
+  border-left:3px solid var(--cf-border);
+  padding:16px 20px;
+  margin:20px 0;
+  font-size:13px;
+  line-height:1.7;
+}
+.completion-code{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:900;
+  letter-spacing:0.1em;
+  text-align:center;
+  padding:20px;
+  border:2px solid var(--ink);
+  margin:20px 0;
+}
+
 @media(max-width:700px){.layout{grid-template-columns:1fr;}.sidebar{border-right:none;border-bottom:1px solid var(--rule);}.feed{padding:20px 16px;}}
 </style>
 </head>
 <body>
-<div class="loading-overlay" id="loading">
+
+<!-- ── Study Wizard ── -->
+<div class="wizard-overlay" id="wizard">
+  <div class="wizard-box">
+
+    <!-- Progress dots -->
+    <!-- Progress dots -->
+    <div class="wizard-progress">
+      <div class="wizard-progress-dot active" id="dot-1"></div>
+      <div class="wizard-progress-dot" id="dot-2"></div>
+      <div class="wizard-progress-dot" id="dot-3"></div>
+      <div class="wizard-progress-dot" id="dot-4"></div>
+      <div class="wizard-progress-dot" id="dot-5"></div>
+      <div class="wizard-progress-dot" id="dot-6"></div>
+      <div class="wizard-progress-dot" id="dot-7"></div>
+    </div>
+
+    <!-- STEP 1: Welcome + Consent -->
+    <div class="wizard-step active" id="step-1">
+      <div class="wizard-title">News<span style="color:#e8c84a">Flow</span></div>
+      <div class="wizard-subtitle">A research study on personalised news recommendations</div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">About this study</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">
+          This study is conducted as part of a Master's thesis at JADS (Jheronimus Academy of Data Science).
+          You will browse a personalised news feed and answer a short questionnaire.
+          The study takes approximately <strong style="color:var(--ink)">10-15 minutes</strong>.
+        </p>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted)">
+          Your participation is <strong style="color:var(--ink)">voluntary and anonymous</strong>.
+          You may withdraw at any time. Data will only be used for academic research purposes.
+        </p>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Informed Consent</div>
+        <div class="consent-box">
+          <strong>Research purpose:</strong> This study investigates how explanations and user controls affect trust and satisfaction with news recommendation systems.<br><br>
+          <strong>What you will do:</strong> First personalise your news feed by selecting your interests, then browse for approximately 5 minutes, then complete a short survey.<br><br>
+          <strong>Data collection:</strong> We log which articles you click, how long you read them, and interactions with the system. No personal identifying information is collected.<br><br>
+          <strong>Anonymity:</strong> Your responses are completely anonymous and used only for academic research.<br><br>
+          <strong>Voluntary participation:</strong> You may withdraw at any time without consequences.<br><br>
+          <strong>Contact:</strong> If you have questions, please contact the research team at JADS.
+        </div>
+        <label class="consent-agree">
+          <input type="checkbox" id="consent-check" onchange="checkConsent()">
+          <span>I have read and understood the information above. I agree to participate voluntarily.</span>
+        </label>
+      </div>
+      <button class="wizard-btn" id="btn-1" onclick="goToStep(2)" disabled>I Agree — Begin →</button>
+    </div>
+
+    <!-- STEP 2: Demographics -->
+    <div class="wizard-step" id="step-2">
+      <div class="wizard-title">A few quick questions</div>
+      <div class="wizard-subtitle">About you — takes about 1 minute</div>
+      <div class="wizard-section">
+        <div class="survey-question">
+          <label class="survey-label">What is your age?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="age" value="18-24"> 18–24</label>
+            <label class="survey-option"><input type="radio" name="age" value="25-34"> 25–34</label>
+            <label class="survey-option"><input type="radio" name="age" value="35-44"> 35–44</label>
+            <label class="survey-option"><input type="radio" name="age" value="45-54"> 45–54</label>
+            <label class="survey-option"><input type="radio" name="age" value="55+"> 55 or older</label>
+            <label class="survey-option"><input type="radio" name="age" value="prefer-not"> Prefer not to say</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">What is your gender?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="gender" value="male"> Male</label>
+            <label class="survey-option"><input type="radio" name="gender" value="female"> Female</label>
+            <label class="survey-option"><input type="radio" name="gender" value="nonbinary"> Non-binary</label>
+            <label class="survey-option"><input type="radio" name="gender" value="prefer-not"> Prefer not to say</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">What is your highest level of education?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="education" value="highschool"> High school</label>
+            <label class="survey-option"><input type="radio" name="education" value="bachelor"> Bachelor's degree</label>
+            <label class="survey-option"><input type="radio" name="education" value="master"> Master's degree</label>
+            <label class="survey-option"><input type="radio" name="education" value="phd"> PhD or higher</label>
+            <label class="survey-option"><input type="radio" name="education" value="other"> Other</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">How often do you read online news?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="news-freq" value="daily"> Daily</label>
+            <label class="survey-option"><input type="radio" name="news-freq" value="several-week"> Several times a week</label>
+            <label class="survey-option"><input type="radio" name="news-freq" value="weekly"> Once a week</label>
+            <label class="survey-option"><input type="radio" name="news-freq" value="rarely"> Rarely</label>
+            <label class="survey-option"><input type="radio" name="news-freq" value="never"> Never</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">How familiar are you with how news recommendation systems work?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="familiarity" value="1"> Not familiar at all</label>
+            <label class="survey-option"><input type="radio" name="familiarity" value="2"> Slightly familiar</label>
+            <label class="survey-option"><input type="radio" name="familiarity" value="3"> Moderately familiar</label>
+            <label class="survey-option"><input type="radio" name="familiarity" value="4"> Very familiar</label>
+            <label class="survey-option"><input type="radio" name="familiarity" value="5"> Extremely familiar</label>
+          </div>
+        </div>
+      </div>
+      <button class="wizard-btn" onclick="submitDemographics()">Continue →</button>
+    </div>
+
+    <!-- STEP 3: Topic interests -->
+    <div class="wizard-step" id="step-3">
+      <div class="wizard-title">What do you like to read?</div>
+      <div class="wizard-subtitle">Select all topics that interest you — pick at least 3</div>
+      <div class="wizard-section">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px" id="topic-grid">
+          <label class="topic-card" data-cat="news"><span class="topic-icon">🌍</span><span class="topic-label">World News</span></label>
+          <label class="topic-card" data-cat="sports"><span class="topic-icon">⚽</span><span class="topic-label">Sports</span></label>
+          <label class="topic-card" data-cat="finance"><span class="topic-icon">💰</span><span class="topic-label">Finance</span></label>
+          <label class="topic-card" data-cat="tv"><span class="topic-icon">🎬</span><span class="topic-label">TV & Film</span></label>
+          <label class="topic-card" data-cat="health"><span class="topic-icon">🏥</span><span class="topic-label">Health</span></label>
+          <label class="topic-card" data-cat="travel"><span class="topic-icon">✈️</span><span class="topic-label">Travel</span></label>
+          <label class="topic-card" data-cat="music"><span class="topic-icon">🎵</span><span class="topic-label">Music</span></label>
+          <label class="topic-card" data-cat="foodanddrink"><span class="topic-icon">🍕</span><span class="topic-label">Food & Drink</span></label>
+          <label class="topic-card" data-cat="autos"><span class="topic-icon">🚗</span><span class="topic-label">Autos</span></label>
+          <label class="topic-card" data-cat="lifestyle"><span class="topic-icon">✨</span><span class="topic-label">Lifestyle</span></label>
+          <label class="topic-card" data-cat="weather"><span class="topic-icon">☀️</span><span class="topic-label">Weather</span></label>
+          <label class="topic-card" data-cat="entertainment"><span class="topic-icon">🎭</span><span class="topic-label">Entertainment</span></label>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px" id="topic-count-msg">Select at least 3 topics to continue</div>
+      </div>
+      <button class="wizard-btn" id="btn-topics" onclick="submitTopics()" disabled>Continue →</button>
+    </div>
+
+    <!-- STEP 4: Reading style + warm-up -->
+    <div class="wizard-step" id="step-4">
+      <div class="wizard-title">Your reading style</div>
+      <div class="wizard-subtitle">Help us personalise your feed further</div>
+      <div class="wizard-section">
+        <div class="survey-question">
+          <label class="survey-label">How would you describe your news reading style?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="reading-style" value="quick"> I read quickly — headlines and abstracts</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="deep"> I read deeply — full articles on topics I care about</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="broad"> I browse broadly — a bit of everything</label>
+            <label class="survey-option"><input type="radio" name="reading-style" value="stories"> I follow specific ongoing stories</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">What kind of news do you prefer?</label>
+          <div class="survey-options">
+            <label class="survey-option"><input type="radio" name="news-type" value="breaking"> Breaking news — what's happening right now</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="analysis"> Analysis — deeper context and opinion</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="features"> Features — longer stories and investigations</label>
+            <label class="survey-option"><input type="radio" name="news-type" value="mix"> Mix of everything</label>
+          </div>
+        </div>
+        <div class="survey-question">
+          <label class="survey-label">How important is it that news recommendations match your interests closely?</label>
+          <div class="likert-scale" data-q="personalization-importance" style="max-width:400px"></div>
+          <div class="likert-labels" style="max-width:400px"><span>Not important</span><span>Very important</span></div>
+        </div>
+      </div>
+      <button class="wizard-btn" onclick="submitReadingStyle()">Build My Feed →</button>
+    </div>
+
+    <!-- STEP 5: Warm-up article selection -->
+    <div class="wizard-step" id="step-5">
+      <div class="wizard-title">Quick warm-up</div>
+      <div class="wizard-subtitle">Which of these would you normally click on? Select any that interest you.</div>
+      <div class="wizard-section">
+        <div id="warmup-articles" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px">You can select multiple or none — just be honest about what you'd normally read.</div>
+        <button class="warmup-refresh-btn" id="warmup-refresh-btn" onclick="refreshWarmupArticles()">
+          <span class="warmup-refresh-icon">&#8635;</span>
+          <span id="warmup-refresh-label">Show different articles (3 remaining)</span>
+        </button>
+      </div>
+      <button class="wizard-btn" onclick="submitWarmup()">Continue →</button>
+    </div>
+
+    <!-- STEP 6: Task instructions -->
+    <div class="wizard-step" id="step-6">
+      <div class="wizard-title">You're almost ready</div>
+      <div class="wizard-subtitle">Please read carefully before starting</div>
+      <div class="wizard-section">
+        <div class="instruction-card">
+          <div class="instruction-number">01</div>
+          <div class="instruction-text">You will see a <strong>personalised news feed</strong> built from your interests. Browse the articles as you would normally read news.</div>
+        </div>
+        <div class="instruction-card">
+          <div class="instruction-number">02</div>
+          <div class="instruction-text">Click <strong>"Read article"</strong> on articles that interest you. Try to read at least 3-5 articles.</div>
+        </div>
+        <div class="instruction-card" id="instruction-explanation" style="display:none">
+          <div class="instruction-number">03</div>
+          <div class="instruction-text">You can click <strong>"ℹ Why?"</strong> to see an explanation of why each article was recommended to you.</div>
+        </div>
+        <div class="instruction-card" id="instruction-control" style="display:none">
+          <div class="instruction-number" id="instruction-control-num">03</div>
+          <div class="instruction-text">You can <strong>remove articles from your reading history</strong> using the ✕ button to update your recommendations in real time.</div>
+        </div>
+        <div class="instruction-card">
+          <div class="instruction-number" id="final-instruction-num">03</div>
+          <div class="instruction-text">Please spend at least <strong>5 minutes</strong> browsing. A timer will show your progress at the top.</div>
+        </div>
+      </div>
+      <button class="wizard-btn" onclick="startTask()">Start Browsing →</button>
+    </div>
+
+    <!-- STEP 7: Post-task survey -->
+    <div class="wizard-step" id="step-7">
+      <div class="wizard-title">Almost done</div>
+      <div class="wizard-subtitle">Please answer these questions about your experience</div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Trust</div>
+        <div class="survey-question"><label class="survey-label">The recommendations reflected my actual interests.</label><div class="likert-scale" data-q="trust1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">I trust this system to recommend relevant articles.</label><div class="likert-scale" data-q="trust2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">The recommendations were relevant to my interests.</label><div class="likert-scale" data-q="trust3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Transparency</div>
+        <div class="survey-question"><label class="survey-label">I understood why the articles were recommended to me.</label><div class="likert-scale" data-q="transparency1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">The system was clear about how it makes recommendations.</label><div class="likert-scale" data-q="transparency2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">I could make sense of the recommendations I received.</label><div class="likert-scale" data-q="transparency3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Satisfaction</div>
+        <div class="survey-question"><label class="survey-label">I am satisfied with the recommendations I received.</label><div class="likert-scale" data-q="satisfaction1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">I would use this news service in my daily life.</label><div class="likert-scale" data-q="satisfaction2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">The feed felt personalised to me.</label><div class="likert-scale" data-q="satisfaction3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+      </div>
+      <div class="wizard-section" id="control-questions" style="display:none">
+        <div class="wizard-section-title">Control</div>
+        <div class="survey-question"><label class="survey-label">I felt in control of my recommendations.</label><div class="likert-scale" data-q="control1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">I could influence what content was shown to me.</label><div class="likert-scale" data-q="control2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">Adjusting my history changed my recommendations in a useful way.</label><div class="likert-scale" data-q="control3"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Personalisation</div>
+        <div class="survey-question"><label class="survey-label">The recommendations matched the interests I selected at the start.</label><div class="likert-scale" data-q="personalization1"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+        <div class="survey-question"><label class="survey-label">I felt the system understood what kind of news I like.</label><div class="likert-scale" data-q="personalization2"></div><div class="likert-labels"><span>Strongly disagree</span><span>Strongly agree</span></div></div>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Open feedback</div>
+        <div class="survey-question">
+          <label class="survey-label">Is there anything you would like to tell us about your experience? (optional)</label>
+          <textarea id="open-feedback" style="width:100%;padding:12px;border:1px solid var(--rule);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;background:var(--paper);color:var(--ink)" placeholder="Your thoughts..."></textarea>
+        </div>
+      </div>
+      <button class="wizard-btn" onclick="submitPostSurvey()">Submit →</button>
+    </div>
+
+    <!-- STEP 8: Debrief -->
+    <div class="wizard-step" id="step-8">
+      <div class="wizard-title">Thank you! 🎉</div>
+      <div class="wizard-subtitle">Your responses have been recorded</div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">About this study</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">
+          This study investigated how different types of explanations and user controls affect trust,
+          transparency, and satisfaction with news recommendation systems.
+        </p>
+        <div class="debrief-condition" id="debrief-condition-text"></div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted)">
+          Your participation helps us understand how to design more transparent and trustworthy
+          AI-powered news systems. Thank you for contributing to this research.
+        </p>
+      </div>
+      <div class="wizard-section">
+        <div class="wizard-section-title">Your completion code</div>
+        <div class="completion-code" id="completion-code"></div>
+        <p style="font-size:12px;color:var(--muted);text-align:center">Please save this code as proof of participation.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+ (shown during feed) -->
+<div id="task-timer-container" style="display:none;background:var(--cream);border-bottom:1px solid var(--rule);padding:8px 24px;">
+  <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+  <div class="timer-text" id="timer-text">Please browse for at least 5 minutes before continuing</div>
+  <div style="text-align:right;margin-top:4px">
+    <button id="continue-btn" onclick="goToPostSurvey()" disabled
+      style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;opacity:0.4;transition:opacity 0.3s"
+      id="continue-survey-btn">
+      Continue to Survey →
+    </button>
+  </div>
+</div>
+
+
+<div class="loading-overlay" id="loading" style="display:none">
   <div class="loading-title">News<span>Flow</span></div>
   <p style="color:var(--muted);font-size:13px;letter-spacing:.1em">Personalising your feed…</p>
   <div class="loading-dots"><span></span><span></span><span></span></div>
@@ -100,37 +674,114 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 </div>
 <div class="condition-badge" id="condition-badge"></div>
 <div class="toast" id="toast"></div>
+<!-- Article Modal -->
+<div class="modal-overlay" id="article-modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal-box" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕ Close</button>
+    <div class="modal-category" id="modal-category"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-body" id="modal-body">
+      <div style="color:var(--muted);font-style:italic;text-align:center;padding:40px 0">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <div style="margin-top:12px;font-size:13px">Generating full article...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const API="https://exemption-vineyard-widely.ngrok-free.dev";
+const API = window.location.hostname === "localhost" ? "http://localhost:8000" : "https://" + window.location.hostname;
 
 // Category to Unsplash search term mapping
 // Category → curated Unsplash photo IDs (consistent, relevant, free)
+// Category AND subcategory photo mapping — more photos per category for variety
 const CAT_PHOTO_IDS = {
-  "news":          ["1504711434969-e33886168f5c","1585829365295-ab7a85e22e20","1517245386807-bb43f82c33c4"],
-  "sports":        ["1461896836934-ffe607ba8211","1579952363873-27f3bade9f55","1560272564-d83cfc4e40c0"],
-  "travel":        ["1488085061851-e8f57fac5b4a","1476514525535-07fb3b4ae5f1","1502920514313-52581002a659"],
-  "autos":         ["1494976388531-d1058494cdd8","1503376780353-7e6692767b70","1555215695-3004980ad54e"],
-  "tv":            ["1522869635100-9f4c5e86aa37","1585951237318-9516cf9d4b7b","1611162617213-7d7a39e9b1d7"],
-  "music":         ["1511671782779-c97d3d27a1d4","1493225457124-a3eb161ffa5f","1514320291840-2e0a9bf2a9ae"],
-  "health":        ["1505751172876-fa1923c5c528","1559757148-5c350d0d3c56","1576091160399-112ba8d25d1d"],
-  "finance":       ["1611974789855-9c02a680be0c","1579621970795-87facc2f976d","1565514020179-026b92b84bb6"],
-  "food":          ["1504674900247-0877df9cc836","1512621776951-a57141f0eeea","1567620905732-2d1ec7ab7445"],
-  "technology":    ["1518770660439-4636190af475","1531297484001-80022131f5a1","1488590528505-98d2b5aba04b"],
-  "weather":       ["1504253163759-acabd2135f45","1561553873-e0891b523e71","1516912481800-4e842d10e438"],
-  "lifestyle":     ["1511988617509-a57c8a288659","1490730141103-04e47f300787","1506126279646-a697353d3166"],
-  "entertainment": ["1489599849927-2ee91cede3ba","1533488765986-dfa2a9939acd","1536440136628-849c177e76a1"],
-  "video":         ["1611162616305-c69b3fa7fbe0","1536240478227-b36c8a41eadc","1574717024653-61fd2cf4d44d"],
-  "politics":      ["1541872703-74c5e44368f9","1529107386315-e1a2ed48a620","1555848962-6e79cbe46197"],
-  "crime":         ["1589578527966-fdac0f44566c","1453873531674-2151bcd01dc5","1580130775562-0ef4f1b0b234"],
+  // News
+  "news":               ["1504711434969-e33886168f5c","1585829365295-ab7a85e22e20","1517245386807-bb43f82c33c4","1504711434969-e33886168f5c","1495020689067-958852172e21","1590247813693-b5a9d5ec5b6b"],
+  "newsus":             ["1501466044931-62695aada8e9","1529107386315-e1a2ed48a620","1555848962-6e79cbe46197","1541872703-74c5e44368f9","1487260392921-196f6ae17b2a"],
+  "newspolitics":       ["1541872703-74c5e44368f9","1529107386315-e1a2ed48a620","1555848962-6e79cbe46197","1487260392921-196f6ae17b2a","1494172961572-a34c0b6c7c2c"],
+  "newscrime":          ["1589578527966-fdac0f44566c","1453873531674-2151bcd01dc5","1580130775562-0ef4f1b0b234","1504711434969-e33886168f5c","1587560699334-5b6ef3b48a1a"],
+  "newsworld":          ["1504711434969-e33886168f5c","1495020689067-958852172e21","1517245386807-bb43f82c33c4","1529107386315-e1a2ed48a620","1488229297937-c3bb72b827f8"],
+  "newsscienceandtechnology": ["1518770660439-4636190af475","1531297484001-80022131f5a1","1488590528505-98d2b5aba04b","1451187580459-43490279c0fa","1507003211169-0a1dd7228f2d"],
+  "newstrends":         ["1504711434969-e33886168f5c","1585829365295-ab7a85e22e20","1495020689067-958852172e21"],
+  "newsoffbeat":        ["1585829365295-ab7a85e22e20","1517245386807-bb43f82c33c4","1504711434969-e33886168f5c"],
+
+  // Sports
+  "sports":             ["1461896836934-ffe607ba8211","1579952363873-27f3bade9f55","1560272564-d83cfc4e40c0","1546519638-68e109498ffc","1471295253337-3ceaabd47c35"],
+  "football_nfl":       ["1566577739-c40c61316fd3","1508098682695-1e1f5b5dc59f","1529901627009-4cf9a7f94cc9","1534258936596-a2e5e8e88c8a","1508098682695-1e1f5b5dc59f"],
+  "football_ncaa":      ["1566577739-c40c61316fd3","1508098682695-1e1f5b5dc59f","1529901627009-4cf9a7f94cc9","1461896836934-ffe607ba8211","1471295253337-3ceaabd47c35"],
+  "basketball_nba":     ["1546519638-68e109498ffc","1504450458-31c0cc034e55","1519861531473-91b17e9aca56","1574623452334-1e0ac2b3ccb4","1558617048-d2f78cac2fe5"],
+  "basketball_ncaa":    ["1546519638-68e109498ffc","1504450458-31c0cc034e55","1519861531473-91b17e9aca56"],
+  "baseball_mlb":       ["1566479153369-ed08c28d66d4","1540747913096-ef3eba3e2792","1529768167801-9173d5b4a82a","1471295253337-3ceaabd47c35"],
+  "icehockey_nhl":      ["1515703407324-5f753afd8be8","1580692475446-c2fabb92674","1547347338-f4b8d3ef5a5b"],
+  "golf":               ["1535131749-b240a776e3e8","1587174486073-ae5e5cff23aa","1500392416400-49d7afc3a4d5"],
+  "mma":                ["1549719032-84d99edfe307","1544117519-31a4b915013","1517438322-c42b9df0f41b"],
+  "more_sports":        ["1461896836934-ffe607ba8211","1579952363873-27f3bade9f55","1471295253337-3ceaabd47c35"],
+
+  // Finance
+  "finance":            ["1611974789855-9c02a680be0c","1579621970795-87facc2f976d","1565514020179-026b92b84bb6","1444653614-1a38b2cd5da1","1526304640581-d339046af166"],
+  "financenews":        ["1611974789855-9c02a680be0c","1579621970795-87facc2f976d","1444653614-1a38b2cd5da1","1526304640581-d339046af166"],
+  "finance-real-estate":["1560518883-ce09059eeffa","1486406280891-59b0aad6ca39","1582407947304-d02b5f56dc5d","1570129477492-cabc209e5624"],
+  "finance-companies":  ["1444653614-1a38b2cd5da1","1526304640581-d339046af166","1611974789855-9c02a680be0c","1507679799797-9b0b60d82b7e"],
+  "markets":            ["1611974789855-9c02a680be0c","1526304640581-d339046af166","1579621970795-87facc2f976d"],
+
+  // Food & Drink
+  "foodanddrink":       ["1504674900247-0877df9cc836","1512621776951-a57141f0eeea","1567620905732-2d1ec7ab7445","1565299624946-b28f40a04680","1482049016688-2d3e1ff311e9"],
+  "recipes":            ["1466637574441-749b8f19452f","1504674900247-0877df9cc836","1512621776951-a57141f0eeea","1565299624946-b28f40a04680"],
+
+  // Lifestyle
+  "lifestyle":          ["1511988617509-a57c8a288659","1490730141103-04e47f300787","1506126279646-a697353d3166","1545205597-3d9d02c29597","1483985988041-bb273ac7ab73"],
+  "lifestylebuzz":      ["1511988617509-a57c8a288659","1490730141103-04e47f300787","1545205597-3d9d02c29597"],
+  "lifestyleroyals":    ["1529156069898-49953e39b3ac","1560169897-ab8c90a5f3b6","1490730141103-04e47f300787","1511988617509-a57c8a288659"],
+
+  // Travel
+  "travel":             ["1488085061851-e8f57fac5b4a","1476514525535-07fb3b4ae5f1","1502920514313-52581002a659","1530521954074-e0a17c15ab62","1503220317-629786965071"],
+  "travelarticle":      ["1488085061851-e8f57fac5b4a","1476514525535-07fb3b4ae5f1","1530521954074-e0a17c15ab62","1503220317-629786965071"],
+  "travelnews":         ["1476514525535-07fb3b4ae5f1","1502920514313-52581002a659","1488085061851-e8f57fac5b4a"],
+
+  // Health
+  "health":             ["1505751172876-fa1923c5c528","1559757148-5c350d0d3c56","1576091160399-112ba8d25d1d","1498582180543-539b2c3b05c8","1532938911079-1346d177d49a"],
+  "health-news":        ["1505751172876-fa1923c5c528","1498582180543-539b2c3b05c8","1532938911079-1346d177d49a"],
+  "medical":            ["1559757148-5c350d0d3c56","1576091160399-112ba8d25d1d","1505751172876-fa1923c5c528","1532938911079-1346d177d49a"],
+
+  // Autos
+  "autos":              ["1494976388531-d1058494cdd8","1503376780353-7e6692767b70","1555215695-3004980ad54e","1552519453-93f8a16b5a1b","1511919884226-fd3cad34687c"],
+  "autosnews":          ["1494976388531-d1058494cdd8","1503376780353-7e6692767b70","1552519453-93f8a16b5a1b","1511919884226-fd3cad34687c"],
+
+  // TV & Entertainment
+  "tv":                 ["1522869635100-9f4c5e86aa37","1585951237318-9516cf9d4b7b","1611162617213-7d7a39e9b1d7","1478720568477-152d9b1ac2e9","1489599849927-2ee91cede3ba"],
+  "entertainment":      ["1489599849927-2ee91cede3ba","1533488765986-dfa2a9939acd","1536440136628-849c177e76a1","1478720568477-152d9b1ac2e9","1522869635100-9f4c5e86aa37"],
+  "movies":             ["1489599849927-2ee91cede3ba","1478720568477-152d9b1ac2e9","1536440136628-849c177e76a1","1485846234645-a62e2d9c24fb"],
+  "video":              ["1611162616305-c69b3fa7fbe0","1536240478227-b36c8a41eadc","1574717024653-61fd2cf4d44d"],
+
+  // Music
+  "music":              ["1511671782779-c97d3d27a1d4","1493225457124-a3eb161ffa5f","1514320291840-2e0a9bf2a9ae","1459749491277-7f3d4d77f4ef","1470229722913-7c0e5e31f50"],
+  "musicnews":          ["1511671782779-c97d3d27a1d4","1493225457124-a3eb161ffa5f","1459749491277-7f3d4d77f4ef"],
+
+  // Weather
+  "weather":            ["1504253163759-acabd2135f45","1561553873-e0891b523e71","1516912481800-4e842d10e438","1534274988757-a54347d1122e","1531297484001-80022131f5a1"],
+  "weathertopstories":  ["1504253163759-acabd2135f45","1561553873-e0891b523e71","1534274988757-a54347d1122e"],
+
+  // Kids
+  "kids":               ["1484820540004-14e5bf9a65e0","1503454537195-1dcabb73ffb9","1471286174890-9c112ffca5b4"],
+
+  // Fallback
+  "middleeast":         ["1541872703-74c5e44368f9","1529107386315-e1a2ed48a620","1488229297937-c3bb72b827f8"],
+  "northamerica":       ["1501466044931-62695aada8e9","1529107386315-e1a2ed48a620","1487260392921-196f6ae17b2a"],
 };
 
-function getImageUrl(category, articleId) {
-  const cat = category.toLowerCase();
-  const ids = CAT_PHOTO_IDS[cat] || CAT_PHOTO_IDS["news"];
-  // Pick consistently based on article ID
+function getImageUrl(category, articleId, subcategory) {
+  const cat = (category || "news").toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  const sub = (subcategory || "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
+
+  // Try subcategory first, then category, then fallback to news
+  const ids = CAT_PHOTO_IDS[sub] || CAT_PHOTO_IDS[cat] || CAT_PHOTO_IDS["news"];
+
+  // Pick consistently based on article ID for same image every time
   const seed = (articleId||"x").split("").reduce((a,c)=>a+c.charCodeAt(0),0);
   const photoId = ids[seed % ids.length];
-  return `https://images.unsplash.com/photo-${photoId}?w=400&h=200&fit=crop&auto=format`;
+  return `https://images.unsplash.com/photo-${photoId}?w=400&h=200&fit=crop&auto=format&q=80`;
 }
 
 // Read time estimate based on abstract length
@@ -143,37 +794,63 @@ function readTime(abstract) {
 
 // Pagination state
 let currentPage = 0;
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 8;
 let activeCategory = "all";
 const params=new URLSearchParams(window.location.search);
 const CONDITION=(params.get("condition")||"A").toUpperCase();
+
+// Assign condition — use URL param if provided, otherwise randomize
+function getOrAssignCondition() {
+  const urlCondition = params.get("condition");
+  if (urlCondition && ["A","B","C","D"].includes(urlCondition.toUpperCase())) return urlCondition.toUpperCase();
+  return ["A","B","C","D"][Math.floor(Math.random() * 4)];
+}
+const STUDY_CONDITION = getOrAssignCondition();
 const USER_IDX=params.get("user")?parseInt(params.get("user")):null;
-const HAS_EXPLANATION=["B","D"].includes(CONDITION);
-const HAS_CONTROL=["C","D"].includes(CONDITION);
+// Use STUDY_CONDITION directly — defined above
+let HAS_EXPLANATION=["B","D"].includes(STUDY_CONDITION);
+let HAS_CONTROL=["C","D"].includes(STUDY_CONDITION);
+
+function updateConditionFlags() {
+  HAS_EXPLANATION = ["B","D"].includes(STUDY_CONDITION);
+  HAS_CONTROL     = ["C","D"].includes(STUDY_CONDITION);
+}
 let sessionId=null,userIdx=null,history=[],removedIds=new Set(),recs=[],explanations={};
 
-document.addEventListener("DOMContentLoaded",async()=>{
+document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("masthead-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-  const labels={A:"Condition A — No explanation · No control",B:"Condition B — Counterfactual explanation · No control",C:"Condition C — No explanation · With control",D:"Condition D — Counterfactual explanation · With control"};
-  if(params.get("debug")==="true"){document.getElementById("condition-badge").textContent=labels[CONDITION]||`Condition ${CONDITION}`;}else{document.getElementById("condition-badge").style.display="none";}
-  const hints={A:"These articles were recommended based on your reading history.",B:"These articles were recommended based on your reading history. See why each was recommended below.",C:"You can remove articles from your history using the ✕ button to update your recommendations.",D:"Remove articles from your history to change recommendations. See why each was recommended below."};
-  document.getElementById("sidebar-hint").textContent=hints[CONDITION]||"";
-  await startSession();
+  // Session starts when user clicks Start Browsing in wizard
 });
+
+// Called from wizard startTask()
+async function initSession() {
+  const labels={A:"Condition A — No explanation · No control",B:"Condition B — Counterfactual explanation · No control",C:"Condition C — No explanation · With control",D:"Condition D — Counterfactual explanation · With control"};
+  if(params.get("debug")==="true"){document.getElementById("condition-badge").textContent=labels[STUDY_CONDITION]||`Condition ${STUDY_CONDITION}`;}else{document.getElementById("condition-badge").style.display="none";}
+  const hints={A:"These articles were recommended based on your reading history.",B:"These articles were recommended based on your reading history. See why each was recommended below.",C:"You can remove articles from your history using the ✕ button to update your recommendations.",D:"Remove articles from your history to change recommendations. See why each was recommended below."};
+  document.getElementById("sidebar-hint").textContent=hints[STUDY_CONDITION]||"";
+  await startSession();
+}
 
 async function startSession(){
   try{
-    const res=await fetch(`${API}/session/start`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({condition:CONDITION,user_idx:USER_IDX})});
+    const condition = (typeof STUDY_CONDITION !== 'undefined') ? STUDY_CONDITION : CONDITION;
+    const res=await fetch(`${API}/session/start`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({condition:condition,user_idx:USER_IDX,topics:selectedTopics||[]})});
     const data=await res.json();
     sessionId=data.session_id;userIdx=data.user_idx;history=data.history;recs=data.recommendations;explanations={};
-    // fetch explanations immediately for conditions B and D
-    if(["B","D"].includes(CONDITION)){
-      const expRes=await fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:CONDITION,user_idx:userIdx,removed_ids:[]})});
-      const expData=await expRes.json();
-      explanations=expData.explanations||{};
-    }
     renderHistory();renderFeed();
     document.getElementById("loading").style.display="none";
+    // Fetch explanations in background for conditions B and D
+    setTimeout(async ()=>{
+      if(["B","D"].includes(STUDY_CONDITION||CONDITION)){
+        fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:STUDY_CONDITION||CONDITION,user_idx:userIdx,removed_ids:[]})})
+          .then(r=>r.json())
+          .then(expData=>{
+            explanations=expData.explanations||{};
+            renderFeed();
+          });
+      }
+      // Don't auto pre-generate — only generate when user clicks Read Article
+    }, 500);
   }catch(e){
     document.getElementById("loading").innerHTML=`<div style="text-align:center;padding:40px"><div style="font-size:24px;font-family:'Playfair Display',serif;margin-bottom:12px">Could not connect to API</div><div style="color:var(--muted);font-size:14px">Make sure the backend is running:<br><code style="background:#eee;padding:4px 8px;border-radius:3px">uvicorn api:app --reload --port 8000</code></div></div>`;
   }
@@ -259,16 +936,50 @@ function renderFeed(append=false){
     const isNew=article._justRead===true;
     let cfHtml="";
     if(cf.length>0){
-      cfHtml=cf.map(item=>item.impact==="soft"
-        ? `<div class="cf-item"><span class="cf-icon">📰</span><span class="cf-text">You read similar content: <strong>"${item.article.title.substring(0,55)}…"</strong></span></div>`
-        : `<div class="cf-item"><span class="cf-icon">📰</span><span class="cf-text">If you remove <strong>"${item.article.title.substring(0,50)}…"</strong> from your history, this recommendation would disappear.</span></div>`
-      ).join("");
+      // Separate by impact type
+      const strong = cf.filter(i=>i.impact==="high");
+      const soft   = cf.filter(i=>i.impact==="soft");
+      const topic  = cf.find(i=>i.impact==="topic");
+
+      let parts = [];
+
+      // Topic based — show FIRST as general context
+      if(topic && topic.topics){
+        parts.push(
+          `<div class="cf-item">
+            <span class="cf-icon">🏷️</span>
+            <span class="cf-text">Because you read articles about: <strong>${topic.topics.join(", ")}</strong></span>
+          </div>`
+        );
+      }
+
+      // Soft similarity
+      if(soft.length>0){
+        parts.push(soft.map(item=>
+          `<div class="cf-item">
+            <span class="cf-icon">📰</span>
+            <span class="cf-text">Similar to articles you read: <strong>"${item.article.title.substring(0,50)}…"</strong></span>
+          </div>`
+        ).join(""));
+      }
+
+      // Strong counterfactuals — show LAST as deepest explanation
+      if(strong.length>0){
+        parts.push(strong.slice(0,5).map(item=>
+          `<div class="cf-item">
+            <span class="cf-icon">🔗</span>
+            <span class="cf-text">If you remove <strong>"${item.article.title.substring(0,50)}…"</strong> from your history, this recommendation would disappear.</span>
+          </div>`
+        ).join(""));
+      }
+
+      cfHtml = parts.join("") || `<div class="cf-empty">This article matches your general reading interests.</div>`;
     } else {
       cfHtml=`<div class="cf-empty">This article matches your general reading interests.</div>`;
     }
     card.innerHTML=`
       <div style="margin:-20px -20px 16px;overflow:hidden;height:140px;background:var(--cream);position:relative;">
-        <img src="${getImageUrl(article.category,article.id)}" alt="${article.category}" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s" onerror="this.parentElement.style.background='var(--cream)'" onload="this.style.opacity=0.88">
+        <img src="${getImageUrl(article.category,article.id,article.subcategory)}" alt="${article.category}" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s" onerror="this.parentElement.style.background='var(--cream)'" onload="this.style.opacity=0.88">
       </div>
       ${isTopRec?'<span class="badge-foryou">✦ Just for you</span>':""}
       ${isNew?'<span class="badge-new">● Just read</span>':""}
@@ -298,42 +1009,107 @@ function renderFeed(append=false){
 function removeItem(id){removedIds.add(id);renderHistory();document.getElementById("update-bar").classList.add("visible");logEvent("history_remove",{article_id:id});}
 function restoreItem(id){removedIds.delete(id);renderHistory();if(removedIds.size>0){document.getElementById("update-bar").classList.add("visible");}else{document.getElementById("update-bar").classList.remove("visible");refreshFeed();}logEvent("history_restore",{article_id:id});}
 function restoreAll(){removedIds.clear();renderHistory();document.getElementById("update-bar").classList.remove("visible");refreshFeed();logEvent("history_restore_all",{});}
-function markRead(id, rank) {
-  const card = document.getElementById('card-' + id);
-  card.style.background = "#fffef5";
-  logEvent("article_click", {article_id: id, rank: rank + 1});
+// Track reading time
+let modalOpenTime = null;
+let modalArticleId = null;
 
-  // Find the article data from recs
+async function markRead(id, rank) {
   const article = recs.find(r => r.id === id);
   if (!article) return;
 
-  // Add to history if not already there
+  // Log click
+  logEvent("article_click", {article_id: id, rank: rank + 1});
+
+  // Add to history
   const alreadyInHistory = history.some(h => h.id === id);
   if (!alreadyInHistory) {
-    history.unshift({...article, _justRead: true}); // add to top
+    history.unshift({...article, _justRead: true});
     renderHistory();
-    showToast("Added to your reading history ✓");
   }
 
-  // Find or create the expanded reading view
-  let reader = card.querySelector('.reader-view');
-  if (reader) {
-    reader.style.display = reader.style.display === 'none' ? 'block' : 'none';
-    return;
-  }
-
-  reader = document.createElement('div');
-  reader.className = 'reader-view';
-  reader.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);';
-  reader.innerHTML = `
-    <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Full Article</div>
-    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.3;margin-bottom:14px">${article.title}</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;letter-spacing:.05em;text-transform:uppercase">${article.category}${article.subcategory ? ' · ' + article.subcategory : ''}</div>
-    <div style="font-size:14px;line-height:1.8;color:var(--ink)">${article.abstract || 'Full article content is not available for this preview.'}</div>
-    <div style="margin-top:16px;font-size:12px;color:var(--muted);font-style:italic">This is a preview. Full article not available in study mode.</div>
-  `;
-  card.appendChild(reader);
+  // Open modal
+  openModal(article, id);
 }
+
+function openModal(article, id) {
+  // Set modal content
+  document.getElementById('modal-category').textContent =
+    article.category + (article.subcategory ? ' · ' + article.subcategory : '');
+  document.getElementById('modal-title').textContent = article.title;
+  document.getElementById('modal-meta').innerHTML =
+    `NewsFlow · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
+    <span class="modal-reading-time">⏱ ${readTime(article.abstract)}</span>`;
+
+  // Show modal
+  const modal = document.getElementById('article-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Track reading time
+  modalOpenTime = Date.now();
+  modalArticleId = id;
+
+  // Show content or loading
+  const body = document.getElementById('modal-body');
+  if (articleCache[id]) {
+    renderModalBody(articleCache[id]);
+  } else {
+    body.innerHTML = `<div style="color:var(--muted);font-style:italic;text-align:center;padding:40px 0">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div style="margin-top:12px;font-size:13px">Generating full article...</div>
+    </div>`;
+    generateAndShow(article, id);
+  }
+}
+
+function renderModalBody(text) {
+  const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+  paragraphs.forEach(p => { const el = document.createElement('p'); el.textContent = p; body.appendChild(el); });
+}
+
+async function generateAndShow(article, id) {
+  try {
+    const res = await fetch(API + '/generate/article', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','ngrok-skip-browser-warning':'true'},
+      body: JSON.stringify({title: article.title, abstract: article.abstract, category: article.category})
+    });
+    const data = await res.json();
+    articleCache[id] = data.text;
+    if (modalArticleId === id) renderModalBody(data.text);
+  } catch(e) {
+    articleCache[id] = article.abstract;
+    if (modalArticleId === id) renderModalBody(article.abstract);
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('article-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+
+  // Log reading time
+  if (modalOpenTime && modalArticleId) {
+    const timeSpent = Math.round((Date.now() - modalOpenTime) / 1000);
+    logEvent('article_read_time', {
+      article_id: modalArticleId,
+      seconds: timeSpent
+    });
+    modalOpenTime = null;
+    modalArticleId = null;
+  }
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('article-modal')) closeModal();
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 function toggleExplanation(id){
   const panel=document.getElementById('cf-'+id);
   if(!panel)return;
@@ -341,7 +1117,346 @@ function toggleExplanation(id){
   const article=recs.find(r=>r.id===id);
   logEvent('explanation_viewed',{article_id:id});
 }
+// Cache for pre-generated articles
+const articleCache = {};
+
+async function preGenerateArticles() {
+  // Generate all articles silently in background one by one
+  for (const article of recs) {
+    if (articleCache[article.id]) continue;
+    try {
+      const res = await fetch(API + '/generate/article', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','ngrok-skip-browser-warning':'true'},
+        body: JSON.stringify({
+          title:    article.title,
+          abstract: article.abstract,
+          category: article.category
+        })
+      });
+      const data = await res.json();
+      articleCache[article.id] = data.text;
+    } catch(e) {
+      articleCache[article.id] = article.abstract;
+    }
+  }
+}
+
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2000);}
+
+
+// ── Study Wizard ──────────────────────────────────────────────────────────
+let currentWizardStep = 1;
+let surveyResponses = {};
+let taskStartTime = null;
+let taskTimerInterval = null;
+let selectedTopics = [];
+let warmupSelections = [];
+const TASK_DURATION = 300;
+const TOTAL_STEPS = 8;
+
+// STUDY_CONDITION defined at top of script
+
+// ── Navigation ──
+function checkConsent() {
+  document.getElementById('btn-1').disabled = !document.getElementById('consent-check').checked;
+}
+
+function goToStep(step) {
+  const curr = document.getElementById('step-' + currentWizardStep);
+  if (curr) curr.classList.remove('active');
+  const currDot = document.getElementById('dot-' + currentWizardStep);
+  if (currDot) { currDot.classList.remove('active'); currDot.classList.add('done'); }
+  currentWizardStep = step;
+  const next = document.getElementById('step-' + step);
+  if (next) next.classList.add('active');
+  const nextDot = document.getElementById('dot-' + step);
+  if (nextDot) nextDot.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── Step 2: Demographics ──
+function submitDemographics() {
+  const fields = ['age','gender','education','news-freq','familiarity'];
+  const responses = {};
+  let allAnswered = true;
+  fields.forEach(f => {
+    const checked = document.querySelector('input[name="' + f + '"]:checked');
+    if (checked) responses[f] = checked.value;
+    else allAnswered = false;
+  });
+  if (!allAnswered) { alert('Please answer all questions before continuing.'); return; }
+  surveyResponses.demographics = responses;
+  goToStep(3);
+}
+
+// ── Step 3: Topic selection ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('masthead-date').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  // Topic card click handlers
+  document.querySelectorAll('.topic-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('selected');
+      selectedTopics = Array.from(document.querySelectorAll('.topic-card.selected')).map(c => c.dataset.cat);
+      const msg = document.getElementById('topic-count-msg');
+      const btn = document.getElementById('btn-topics');
+      if (selectedTopics.length >= 3) {
+        msg.textContent = selectedTopics.length + ' topics selected ✓';
+        msg.style.color = 'var(--ink)';
+        btn.disabled = false;
+      } else {
+        msg.textContent = 'Select at least ' + (3 - selectedTopics.length) + ' more topic' + (3 - selectedTopics.length > 1 ? 's' : '');
+        msg.style.color = 'var(--muted)';
+        btn.disabled = true;
+      }
+    });
+  });
+});
+
+function submitTopics() {
+  if (selectedTopics.length < 3) { alert('Please select at least 3 topics.'); return; }
+  surveyResponses.topics = selectedTopics;
+  logEvent('topics_selected', {topics: selectedTopics});
+  goToStep(4);
+  // Build likert for personalization importance
+  setTimeout(() => buildLikertScales(), 100);
+}
+
+// ── Step 4: Reading style ──
+function submitReadingStyle() {
+  const style = document.querySelector('input[name="reading-style"]:checked');
+  const type  = document.querySelector('input[name="news-type"]:checked');
+  if (!style || !type) { alert('Please answer all questions.'); return; }
+  surveyResponses.readingStyle = style.value;
+  surveyResponses.newsType = type.value;
+  logEvent('reading_style', {style: style.value, type: type.value});
+  goToStep(5);
+  buildWarmupArticles();
+}
+
+// ── Step 5: Warm-up article selection ──
+const WARMUP_MAX_REFRESHES = 3;
+let warmupRefreshCount = 0;
+let warmupShownBatches = [];
+
+async function buildWarmupArticles(isRefresh = false) {
+  const container = document.getElementById('warmup-articles');
+  const btn       = document.getElementById('warmup-refresh-btn');
+  const label     = document.getElementById('warmup-refresh-label');
+
+  // Preserve already-selected IDs across refresh
+  const previouslySelected = [...warmupSelections];
+
+  container.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Loading articles...</div>';
+  if (btn) btn.disabled = true;
+
+  try {
+    const res = await fetch(API + '/warmup/articles', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','ngrok-skip-browser-warning':'true'},
+      body: JSON.stringify({
+        topics: selectedTopics,
+        exclude_ids: warmupShownBatches
+      })
+    });
+    const data = await res.json();
+    container.innerHTML = '';
+
+    data.articles.forEach(a => {
+      if (!warmupShownBatches.includes(a.id)) warmupShownBatches.push(a.id);
+    });
+
+    data.articles.forEach(article => {
+      const card = document.createElement('label');
+      card.className = 'warmup-card';
+      const isChecked = previouslySelected.includes(article.id);
+      if (isChecked) card.classList.add('selected');
+      card.innerHTML = `
+        <input type="checkbox" value="${article.id}"
+          ${isChecked ? 'checked' : ''}
+          onchange="toggleWarmup('${article.id}', this.checked)">
+        <div class="warmup-card-content">
+          <div class="warmup-cat">${article.category}</div>
+          <div class="warmup-title">${article.title}</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:13px;font-style:italic">Could not load warm-up articles. Click Continue to proceed.</div>';
+  }
+
+  // Update refresh button state
+  const remaining = WARMUP_MAX_REFRESHES - warmupRefreshCount;
+  if (btn && label) {
+    if (remaining <= 0) {
+      btn.disabled = true;
+      label.textContent = 'No more refreshes available';
+    } else {
+      btn.disabled = false;
+      label.textContent = `Show different articles (${remaining} remaining)`;
+    }
+  }
+}
+
+function refreshWarmupArticles() {
+  if (warmupRefreshCount >= WARMUP_MAX_REFRESHES) return;
+  warmupRefreshCount++;
+  logEvent('warmup_refresh', {
+    refresh_number: warmupRefreshCount,
+    selected_before_refresh: [...warmupSelections]
+  });
+  buildWarmupArticles(true);
+}
+
+function toggleWarmup(id, checked) {
+  if (checked) {
+    if (!warmupSelections.includes(id)) warmupSelections.push(id);
+  } else {
+    warmupSelections = warmupSelections.filter(x => x !== id);
+  }
+  document.querySelectorAll('.warmup-card').forEach(card => {
+    const input = card.querySelector('input');
+    if (input && input.checked) card.classList.add('selected');
+    else card.classList.remove('selected');
+  });
+}
+
+function submitWarmup() {
+  surveyResponses.warmupSelections = warmupSelections;
+  logEvent('warmup_complete', {
+    selected: warmupSelections,
+    topics: selectedTopics,
+    refresh_count: warmupRefreshCount,
+    total_articles_shown: warmupShownBatches.length
+  });
+  goToStep(6);
+  setupInstructions();
+}
+
+// ── Step 6: Instructions ──
+function setupInstructions() {
+  const HAS_EXP  = ["B","D"].includes(STUDY_CONDITION);
+  const HAS_CTRL = ["C","D"].includes(STUDY_CONDITION);
+  if (HAS_EXP)  document.getElementById('instruction-explanation').style.display = 'flex';
+  if (HAS_CTRL) document.getElementById('instruction-control').style.display = 'flex';
+  let num = 3;
+  if (HAS_EXP) num++;
+  if (HAS_CTRL) num++;
+  document.getElementById('final-instruction-num').textContent = String(num).padStart(2,'0');
+}
+
+// ── Task ──
+async function startTask() {
+  document.getElementById('wizard').classList.add('hidden');
+  document.getElementById('task-timer-container').style.display = 'block';
+  if (["C","D"].includes(STUDY_CONDITION)) document.getElementById('control-questions').style.display = 'block';
+  taskStartTime = Date.now();
+  startTaskTimer();
+  await initSession();
+}
+
+function startTaskTimer() {
+  const fill = document.getElementById('timer-fill');
+  const text = document.getElementById('timer-text');
+  const btn  = document.getElementById('continue-survey-btn');
+  taskTimerInterval = setInterval(() => {
+    const elapsed   = Math.round((Date.now() - taskStartTime) / 1000);
+    const pct       = Math.min(100, (elapsed / TASK_DURATION) * 100);
+    fill.style.width = pct + '%';
+    const remaining = Math.max(0, TASK_DURATION - elapsed);
+    const mins = Math.floor(remaining / 60);
+    const secs  = remaining % 60;
+    if (remaining > 0) {
+      text.textContent = 'Please browse for ' + mins + ':' + String(secs).padStart(2,'0') + ' more';
+    } else {
+      text.textContent = 'You can now continue to the survey';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      clearInterval(taskTimerInterval);
+    }
+  }, 1000);
+}
+
+function goToPostSurvey() {
+  const timeSpent = Math.round((Date.now() - taskStartTime) / 1000);
+  logEvent('task_complete', {seconds: timeSpent});
+  document.getElementById('task-timer-container').style.display = 'none';
+  document.getElementById('wizard').classList.remove('hidden');
+  buildLikertScales();
+  const curr = document.getElementById('step-' + currentWizardStep);
+  if (curr) curr.classList.remove('active');
+  currentWizardStep = 7;
+  document.getElementById('step-7').classList.add('active');
+  document.getElementById('dot-6').classList.add('done');
+  document.getElementById('dot-7').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── Likert scales ──
+function buildLikertScales() {
+  document.querySelectorAll('.likert-scale').forEach(scale => {
+    const q = scale.dataset.q;
+    if (!q || scale.children.length > 0) return;
+    scale.innerHTML = '';
+    for (let i = 1; i <= 7; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'likert-btn';
+      btn.innerHTML = '<span>' + i + '</span>';
+      btn.onclick = (function(val, s, b) {
+        return function() {
+          s.querySelectorAll('.likert-btn').forEach(x => x.classList.remove('selected'));
+          b.classList.add('selected');
+          surveyResponses[q] = val;
+        };
+      })(i, scale, btn);
+      scale.appendChild(btn);
+    }
+  });
+}
+
+// ── Post-survey ──
+function submitPostSurvey() {
+  const required = ['trust1','trust2','trust3','transparency1','transparency2','transparency3','satisfaction1','satisfaction2','satisfaction3','personalization1','personalization2'];
+  if (["C","D"].includes(STUDY_CONDITION)) required.push('control1','control2','control3');
+  const missing = required.filter(q => !surveyResponses[q]);
+  if (missing.length > 0) { alert('Please answer all questions before submitting.'); return; }
+  surveyResponses.feedback  = document.getElementById('open-feedback').value;
+  surveyResponses.condition = STUDY_CONDITION;
+  logEvent('post_survey', surveyResponses);
+  const code = 'NF-' + (sessionId||'XXXX').toUpperCase() + '-' + STUDY_CONDITION;
+  document.getElementById('completion-code').textContent = code;
+  const debriefs = {
+    A: "You were in the baseline condition — recommendations without explanations or controls. This helps us understand the default user experience.",
+    B: "You were in the explanation condition — you could see why each article was recommended using counterfactual explanations. This helps us understand how explanations affect trust.",
+    C: "You were in the control condition — you could remove articles from your history to change recommendations. This helps us understand how control affects satisfaction.",
+    D: "You were in the full condition — both counterfactual explanations and history control. This helps us understand the combined effect of transparency and agency."
+  };
+  document.getElementById('debrief-condition-text').textContent = debriefs[STUDY_CONDITION];
+  const curr = document.getElementById('step-7');
+  if (curr) curr.classList.remove('active');
+  document.getElementById('step-8').classList.add('active');
+  document.getElementById('dot-7').classList.remove('active');
+  document.getElementById('dot-7').classList.add('done');
+  window.scrollTo(0,0);
+}
+
+// Radio styling
+document.addEventListener('change', e => {
+  if (e.target.type === 'radio') {
+    const name = e.target.name;
+    document.querySelectorAll('input[name="' + name + '"]').forEach(input => {
+      input.closest('.survey-option').classList.remove('selected');
+    });
+    e.target.closest('.survey-option').classList.add('selected');
+  }
+});
+
+// Session starts from wizard startTask()
+
+
 </script>
 </body>
 </html>
