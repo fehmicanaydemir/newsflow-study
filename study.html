@@ -1331,7 +1331,9 @@ const TOTAL_STEPS = 8;
 
 // ── Navigation ──
 function checkConsent() {
-  document.getElementById('btn-1').disabled = !document.getElementById('consent-check').checked;
+  const boxes = document.querySelectorAll('.consent-check-item');
+  const allChecked = Array.from(boxes).every(b => b.checked);
+  document.getElementById('btn-1').disabled = !allChecked;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1733,4 +1735,114 @@ document.addEventListener('change', e => {
 
 </script>
 </body>
-</html>
+</html<div class="wizard-step" id="step-1">
+      <div class="wizard-title">News<span style="color:#e8c84a">Flow</span></div>
+      <div class="wizard-subtitle">A research study on personalised news recommendations</div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">Information Sheet</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:12px">
+          <strong style="color:var(--ink)">Jheronimus Academy of Data Science (JADS)</strong>, a collaboration between
+          Eindhoven University of Technology (TU/e) and Tilburg University, invites you to take part in this research project.
+          This study is conducted as part of a Research-in-Action course and MSc thesis project at JADS.
+          The aim is to investigate how people interact with and experience personalised news recommendation systems.
+          The study takes approximately <strong style="color:var(--ink)">15 to 20 minutes</strong>.
+          To participate you must be <strong style="color:var(--ink)">18 years of age or older</strong>.
+        </p>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:12px">
+          Your participation is completely voluntary and does not pose any physical, legal, or economic risks.
+          You are not obliged to answer questions you are uncomfortable with and you can withdraw at any time without explaining why.
+          Declining or withdrawing will not have any negative consequences for you.
+        </p>
+      </div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">Who are we?</div>
+        <table style="width:100%;font-size:12px;color:var(--muted);border-collapse:collapse;line-height:1.8">
+          <tr><td style="font-weight:600;color:var(--ink);width:160px;padding:2px 0">Data controller</td><td>Eindhoven University of Technology (TU/e), De Groene Loper 3, 5612 AE Eindhoven</td></tr>
+          <tr><td style="font-weight:600;color:var(--ink);padding:2px 0">Researcher</td><td>Fehmican Aydemir &mdash; fehmi.aydemir@student.tue.nl</td></tr>
+          <tr><td style="font-weight:600;color:var(--ink);padding:2px 0">Supervisors</td><td>Dr. Martijn Willemsen (TU/e / JADS) &mdash; m.c.willemsen@tue.nl</td></tr>
+          <tr><td style="font-weight:600;color:var(--ink);padding:2px 0">Privacy</td><td>privacy@tue.nl</td></tr>
+          <tr><td style="font-weight:600;color:var(--ink);padding:2px 0">Data Protection Officer</td><td>dataprotectionofficer@tue.nl</td></tr>
+        </table>
+      </div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">What will taking part involve?</div>
+        <ul style="font-size:13px;line-height:1.8;color:var(--muted);padding-left:20px;margin:0 0 12px 0">
+          <li>A short background questionnaire about you and your news reading habits</li>
+          <li>Selecting your news topics of interest</li>
+          <li>Browsing a personalised news feed for approximately 5 minutes</li>
+          <li>A post-task questionnaire about your experience</li>
+          <li>A full explanation of the study design will be provided before your data is submitted</li>
+        </ul>
+      </div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">What personal data do we collect?</div>
+        <table style="width:100%;font-size:12px;color:var(--muted);border-collapse:collapse;line-height:1.6">
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="font-weight:600;color:var(--ink);padding:4px 8px 4px 0;width:140px">Demographic data</td>
+            <td style="padding:4px 0">Age, gender, education level &mdash; used to describe the study sample</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="font-weight:600;color:var(--ink);padding:4px 8px 4px 0">News habits</td>
+            <td style="padding:4px 0">Reading frequency and preferences &mdash; used as control variables</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="font-weight:600;color:var(--ink);padding:4px 8px 4px 0">Behavioural logs</td>
+            <td style="padding:4px 0">Article clicks and reading time during the session &mdash; used to test research hypotheses</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="font-weight:600;color:var(--ink);padding:4px 8px 4px 0">Survey responses</td>
+            <td style="padding:4px 0">Your ratings and opinions about the experience &mdash; primary outcome measures</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);padding:4px 8px 4px 0">Session identifier</td>
+            <td style="padding:4px 0">A random code with no link to your identity &mdash; links behavioural data to survey responses</td>
+          </tr>
+        </table>
+        <p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:10px">
+          We do not collect your name, email address, or IP address. All data is pseudonymous from the moment of collection.
+          Data is retained for 10 years after the research is complete, after which it will be deleted or fully anonymised.
+          Data is stored on a GDPR-compliant EU server (Hetzner Cloud, Germany).
+        </p>
+      </div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">Your rights</div>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted)">
+          You have the right to request access to, rectification of, objection to, or erasure of your personal data.
+          For questions or complaints contact the researcher at fehmi.aydemir@student.tue.nl or the TU/e Data Protection Officer
+          at dataprotectionofficer@tue.nl. You may also file a complaint with the Dutch Data Protection Authority:
+          Autoriteit Persoonsgegevens (www.autoriteitpersoonsgegevens.nl).
+        </p>
+        <p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">
+          TU/e processes your personal data to conduct scientific research, which is the university's public task as stated in
+          Article 1.3 of the Dutch Wet Hoger onderwijs en Wetenschappelijk onderzoek.
+        </p>
+      </div>
+
+      <div class="wizard-section">
+        <div class="wizard-section-title">Consent</div>
+        <label class="consent-agree" style="margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+          <input type="checkbox" class="consent-check-item" onchange="checkConsent()">
+          <span style="font-size:13px;line-height:1.6">I have read and understood the information sheet above and had the opportunity to ask questions.</span>
+        </label>
+        <label class="consent-agree" style="margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+          <input type="checkbox" class="consent-check-item" onchange="checkConsent()">
+          <span style="font-size:13px;line-height:1.6">I take part voluntarily. I understand I can stop at any time without explaining why and without any negative consequences.</span>
+        </label>
+        <label class="consent-agree" style="margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+          <input type="checkbox" class="consent-check-item" onchange="checkConsent()">
+          <span style="font-size:13px;line-height:1.6">I understand that my personal data will be collected and used as described above, in pseudonymous form.</span>
+        </label>
+        <label class="consent-agree" style="margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+          <input type="checkbox" class="consent-check-item" onchange="checkConsent()">
+          <span style="font-size:13px;line-height:1.6">I am 18 years of age or older.</span>
+        </label>
+      </div>
+      <button class="wizard-btn" id="btn-1" onclick="goToStep(2)" disabled>I Agree and Begin →</button>
+    </div>
+
+>
