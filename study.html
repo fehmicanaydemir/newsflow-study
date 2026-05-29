@@ -478,14 +478,8 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
         <div class="survey-question">
           <label class="survey-label">What is your age?</label>
           <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-            <div style="display:flex;flex-direction:column;border:1px solid var(--rule);">
-              <button type="button" onclick="adjustAge(1)" style="width:32px;height:24px;border:none;border-bottom:1px solid var(--rule);background:none;cursor:pointer;font-size:12px;color:var(--ink);line-height:1;">&#9650;</button>
-              <button type="button" onclick="adjustAge(-1)" style="width:32px;height:24px;border:none;background:none;cursor:pointer;font-size:12px;color:var(--ink);line-height:1;">&#9660;</button>
-            </div>
-            <input type="number" id="age-input" name="age" min="18" max="99" placeholder="18" style="width:70px;padding:8px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:16px;text-align:center;background:var(--paper);color:var(--ink)">
-            <label style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-left:8px">
-              <input type="checkbox" id="age-prefer-not" onchange="toggleAgePreferNot()"> Prefer not to say
-            </label>
+            <input type="number" id="age-input" name="age" min="18" max="99" placeholder="18" style="width:80px;padding:8px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:16px;text-align:center;background:var(--paper);color:var(--ink)">
+            <span style="font-size:12px;color:var(--muted)">years old</span>
           </div>
         </div>
         <div class="survey-question">
@@ -1526,11 +1520,9 @@ function submitDemographics() {
   const responses = {};
   let allAnswered = true;
 
-  // Age from number input or prefer-not checkbox
-  const agePreferNot = document.getElementById('age-prefer-not');
+  // Age from number input
   const ageInput = document.getElementById('age-input');
-  if (agePreferNot && agePreferNot.checked) responses['age'] = 'prefer-not';
-  else if (ageInput && ageInput.value) responses['age'] = ageInput.value;
+  if (ageInput && ageInput.value && parseInt(ageInput.value) >= 18) responses['age'] = ageInput.value;
   else allAnswered = false;
 
   // Radio fields
