@@ -894,7 +894,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 </div>
 
 <script>
-const API = window.location.hostname === "localhost" ? "http://localhost:8000" : "https://" + window.location.hostname;
+const API = window.location.hostname === "localhost" ? "http://localhost:8000" : "http://" + window.location.hostname + ":8000";
 
 // Category to Unsplash search term mapping
 // Category → curated Unsplash photo IDs (consistent, relevant, free)
