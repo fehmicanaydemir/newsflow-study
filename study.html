@@ -258,7 +258,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 }
 .likert-btn{
   display:flex;flex-direction:column;
-  align-items:center;gap:6px;
+  align-items:center;gap:4px;
   padding:10px 4px;
   border:1px solid var(--rule);
   cursor:pointer;
@@ -266,7 +266,9 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
   transition:all 0.2s;
   background:none;
   font-family:'Roboto',sans-serif;
+  flex:1;
 }
+.likert-num{font-size:12px;font-weight:600;color:var(--ink);}
 .likert-btn:hover{border-color:var(--ink);color:var(--ink);}
 .likert-btn.selected{
   background:var(--ink);color:var(--paper);
@@ -1783,10 +1785,13 @@ function buildLikertScales() {
     const q = scale.dataset.q;
     if (!q || scale.children.length > 0) return;
     scale.innerHTML = '';
+    const customLabels = scale.dataset.labels ? scale.dataset.labels.split(',') : null;
+
+    // Build buttons
     for (let i = 1; i <= 7; i++) {
       const btn = document.createElement('button');
       btn.className = 'likert-btn';
-      btn.innerHTML = '<span>' + i + '</span>';
+      btn.innerHTML = '<span class="likert-num">' + i + '</span>';
       btn.onclick = (function(val, s, b) {
         return function() {
           s.querySelectorAll('.likert-btn').forEach(x => x.classList.remove('selected'));
@@ -1796,6 +1801,27 @@ function buildLikertScales() {
       })(i, scale, btn);
       scale.appendChild(btn);
     }
+
+    // Build label row below buttons
+    const labelRow = document.createElement('div');
+    labelRow.style.cssText = 'display:flex;justify-content:space-between;margin-top:4px;';
+    if (customLabels) {
+      customLabels.forEach(lbl => {
+        const span = document.createElement('span');
+        span.style.cssText = 'flex:1;text-align:center;font-size:8px;color:var(--muted);line-height:1.3;padding:0 1px;';
+        span.textContent = lbl;
+        labelRow.appendChild(span);
+      });
+    } else {
+      const stdLabels = ['Strongly disagree','Disagree','Somewhat disagree','Neutral','Somewhat agree','Agree','Strongly agree'];
+      stdLabels.forEach(lbl => {
+        const span = document.createElement('span');
+        span.style.cssText = 'flex:1;text-align:center;font-size:8px;color:var(--muted);line-height:1.3;padding:0 1px;';
+        span.textContent = lbl;
+        labelRow.appendChild(span);
+      });
+    }
+    scale.parentElement.insertBefore(labelRow, scale.nextSibling);
   });
 }
 
