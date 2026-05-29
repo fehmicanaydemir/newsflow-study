@@ -1744,6 +1744,7 @@ function setupInstructions() {
 // ── Task ──
 async function startTask() {
   document.getElementById('wizard').classList.add('hidden');
+  document.getElementById('loading').style.display = 'flex';
   document.getElementById('task-timer-container').style.display = 'block';
   taskStartTime = Date.now();
   startTaskTimer();
