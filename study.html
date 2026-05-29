@@ -1386,7 +1386,7 @@ function closeModalOnOverlay(e) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
-async function toggleExplanation(id){
+function toggleExplanation(id){
   const panel=document.getElementById('cf-'+id);
   if(!panel)return;
   panel.classList.toggle('visible');
@@ -1396,22 +1396,6 @@ async function toggleExplanation(id){
     const cfHtml = buildCfHtml(explanations[id]);
     panel.innerHTML = '<div class="cf-panel-title">💡 Why this recommendation?</div>' + cfHtml;
     panel.dataset.loaded = '1';
-    return;
-  }
-  panel.innerHTML = '<div class="cf-panel-title">💡 Why this recommendation?</div><div style="font-size:12px;color:var(--muted);padding:8px 0">Loading explanation...</div>';
-  panel.classList.add('visible');
-  try {
-    const res = await fetch(API + '/explain', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','ngrok-skip-browser-warning':'true'},
-      body: JSON.stringify({session_id: sessionId, article_id: id})
-    });
-    const data = await res.json();
-    const cfHtml = buildCfHtml(data.explanation || []);
-    panel.innerHTML = '<div class="cf-panel-title">💡 Why this recommendation?</div>' + cfHtml;
-    panel.dataset.loaded = '1';
-  } catch(e) {
-    panel.innerHTML = '<div class="cf-panel-title">💡 Why this recommendation?</div><div style="font-size:12px;color:var(--muted)">Could not load explanation.</div>';
   }
 }
 // Cache for pre-generated articles
