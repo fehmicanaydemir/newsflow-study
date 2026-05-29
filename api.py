@@ -472,6 +472,26 @@ def start_session(req: SessionRequest):
         "recommendations": recs
     }
 
+class ExplainBatchRequest(BaseModel):
+    session_id: str
+    article_ids: list
+
+@app.post("/explain/batch")
+def explain_batch(req: ExplainBatchRequest):
+    sid = req.session_id
+    if sid not in SESSION_STORE:
+        return {"explanations": {}}
+    sess = SESSION_STORE[sid]
+    active_arr = np.zeros(len(id2idx), dtype=np.float32)
+    for aid in sess.get("active_ids", []):
+        if aid in id2idx:
+            active_arr[id2idx[aid]] = 1.0
+    result = {}
+    for article_id in req.article_ids[:20]:
+        if article_id in id2idx:
+            result[article_id] = counterfactual_for(active_arr, id2idx[article_id])
+    return {"explanations": result}
+
 @app.post("/recommend")
 def get_recommendations(req: RemoveRequest):
     removed_set  = set(req.removed_ids or [])
@@ -518,12 +538,8 @@ def get_recommendations(req: RemoveRequest):
                 break
         recs = random_recs
 
-    # Counterfactual explanations for B and D
+    # Explanations fetched separately via /explain/batch
     explanations = {}
-    if req.condition in ("B", "D") and len(active_indices) > 0:
-        active_arr = np.array(active_indices)
-        for rec in recs:
-            explanations[rec["id"]] = counterfactual_for(active_arr, rec["item_idx"])
 
     empty_history = len(active_indices) == 0
     log_event(req.session_id, req.condition, "recommendations_fetched", {

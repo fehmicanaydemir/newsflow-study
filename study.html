@@ -1076,17 +1076,17 @@ async function startSession(){
     renderHistory();renderFeed();
     // Show loading for 2.5s to allow counterfactuals to generate
     setTimeout(() => { document.getElementById("loading").style.display="none"; }, 2500);
-    // Fetch explanations in background for conditions B and D
+    // Fetch explanations in background via /explain/batch
     setTimeout(async ()=>{
       if(["B","D"].includes(STUDY_CONDITION||CONDITION)){
-        fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:STUDY_CONDITION||CONDITION,user_idx:userIdx,removed_ids:[]})})
+        const topIds = recs.slice(0,20).map(r=>r.id);
+        fetch(`${API}/explain/batch`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,article_ids:topIds})})
           .then(r=>r.json())
           .then(expData=>{
             explanations=expData.explanations||{};
             renderFeed();
           });
       }
-      // Don't auto pre-generate — only generate when user clicks Read Article
     }, 500);
   }catch(e){
     document.getElementById("loading").innerHTML=`<div style="text-align:center;padding:40px"><div style="font-size:24px;font-family:'Roboto',sans-serif;margin-bottom:12px">Could not connect to API</div><div style="color:var(--muted);font-size:14px">Make sure the backend is running:<br><code style="background:#eee;padding:4px 8px;border-radius:3px">uvicorn api:app --reload --port 8000</code></div></div>`;
