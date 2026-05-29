@@ -1074,12 +1074,45 @@ async function startSession(){
 async function refreshFeed(){
   document.getElementById("update-bar").classList.remove("visible");
   document.getElementById("feed-subtitle").textContent="Updating…";
-  const res=await fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:CONDITION,user_idx:userIdx,removed_ids:[...removedIds]})});
+
+  // Build read_ids from articles read during session
+  const readIds = (readDuringSession || []);
+  // Build selected_ids from warmup + history
+  const selectedIds = history.map(h => h.id);
+
+  const res=await fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({
+    session_id: sessionId,
+    condition: STUDY_CONDITION || CONDITION,
+    user_idx: userIdx,
+    removed_ids: [...removedIds],
+    read_ids: readIds,
+    selected_ids: selectedIds
+  })});
   const data=await res.json();
-  recs=data.recommendations;explanations=data.explanations||{};
+  recs=data.recommendations;
+  explanations=data.explanations||{};
   renderFeed();
-  document.getElementById("feed-subtitle").textContent=data.removed_count>0?`Based on your history (${data.removed_count} article${data.removed_count>1?"s":""} removed)`:"Based on your reading history";
-  showToast("Feed updated ✓");
+
+  // Update subtitle
+  const readCount = readIds.length;
+  const removeCount = removedIds.size;
+  let subtitle = "Based on your reading history";
+  if (data.empty_history) {
+    subtitle = "Your history is empty. Showing a general mix of articles.";
+    const banner = document.getElementById('empty-history-banner');
+    if (banner) banner.style.display = 'block';
+  } else {
+    const banner = document.getElementById('empty-history-banner');
+    if (banner) banner.style.display = 'none';
+    if (readCount > 0 && removeCount > 0)
+      subtitle = `Updated: ${readCount} article${readCount>1?"s":""} read, ${removeCount} removed`;
+    else if (readCount > 0)
+      subtitle = `Updated: includes ${readCount} article${readCount>1?"s":""} you just read`;
+    else if (removeCount > 0)
+      subtitle = `Based on your history (${removeCount} article${removeCount>1?"s":""} removed)`;
+  }
+  document.getElementById("feed-subtitle").textContent = subtitle;
+  showToast("Feed updated");
 }
 
 async function logEvent(event,data={}){
@@ -1373,6 +1406,7 @@ let taskStartTime = null;
 let taskTimerInterval = null;
 let selectedTopics = [];
 let warmupSelections = [];
+let readDuringSession = [];
 const TASK_DURATION = 300;
 const TOTAL_STEPS = 8;
 
