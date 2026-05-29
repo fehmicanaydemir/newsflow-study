@@ -1079,7 +1079,7 @@ async function startSession(){
     // Fetch explanations in background for conditions B and D
     setTimeout(async ()=>{
       if(["B","D"].includes(STUDY_CONDITION||CONDITION)){
-        fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:STUDY_CONDITION||CONDITION,user_idx:userIdx,removed_ids:[]})})
+        fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:STUDY_CONDITION||CONDITION,user_idx:userIdx,removed_ids:[...removedIds],selected_ids:warmupSelections||[]})})
           .then(r=>r.json())
           .then(expData=>{
             explanations=expData.explanations||{};
