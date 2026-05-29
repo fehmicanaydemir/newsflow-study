@@ -1721,22 +1721,10 @@ function startTaskTimer() {
   const fill = document.getElementById('timer-fill');
   const text = document.getElementById('timer-text');
   const btn  = document.getElementById('continue-survey-btn');
-  taskTimerInterval = setInterval(() => {
-    const elapsed   = Math.round((Date.now() - taskStartTime) / 1000);
-    const pct       = Math.min(100, (elapsed / TASK_DURATION) * 100);
-    fill.style.width = pct + '%';
-    const remaining = Math.max(0, TASK_DURATION - elapsed);
-    const mins = Math.floor(remaining / 60);
-    const secs  = remaining % 60;
-    if (remaining > 0) {
-      text.textContent = 'Please browse for ' + mins + ':' + String(secs).padStart(2,'0') + ' more';
-    } else {
-      text.textContent = 'You can now continue to the survey';
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      clearInterval(taskTimerInterval);
-    }
-  }, 1000);
+  // No minimum time requirement -- enable immediately
+  if (fill) fill.style.width = '100%';
+  if (text) text.textContent = 'Browse the articles below. Click Continue to Survey when ready.';
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
 }
 
 function setupSurveyBlocks() {
