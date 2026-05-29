@@ -695,10 +695,16 @@ Writing guidelines:
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=600,
-            system="You are a professional news journalist writing for a major online news platform. Write realistic, engaging, factual news articles in a clean journalistic style.",
+            system="You are a staff writer at a major online news outlet. Write in plain text only. No markdown, no headers, no bold, no italics, no formatting of any kind. Just clean paragraphs.",
             messages=[{"role": "user", "content": prompt}]
         )
         article_text = response.content[0].text.strip()
+        # Strip markdown headers and formatting
+        import re
+        article_text = re.sub(r'^#{1,6}\s+.*\n?', '', article_text, flags=re.MULTILINE)
+        article_text = re.sub(r'\*\*(.*?)\*\*', r'\1', article_text)
+        article_text = re.sub(r'\*(.*?)\*', r'\1', article_text)
+        article_text = article_text.strip()
         return {"text": article_text, "status": "ok"}
     except Exception as e:
         return {"text": req.abstract, "status": "fallback", "error": str(e)}
