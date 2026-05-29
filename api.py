@@ -314,7 +314,8 @@ def serve_study(request: Request):
 
 @app.get("/")
 def root():
-    return {"status": "ok"}
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/study")
 
 
 # ── Admin Stats ──────────────────────────────────────────────────────────────
