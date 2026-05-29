@@ -20,7 +20,7 @@ from src.explainers import find_cosine_mask
 
 EMB_CSV   = "data/raw/mind_embeddings_full_384.csv"
 VIEWS_CSV = "data/raw/mind_views.csv"
-NEWS_TSV  = "/Users/Fehmican/Downloads/MINDsmall_train/news.tsv"
+NEWS_TSV  = "data/raw/news.tsv"
 LOG_FILE  = "logs/study_interactions.csv"
 TOP_N     = 100
 
