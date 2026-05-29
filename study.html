@@ -29,8 +29,8 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 .feed-header{display:flex;align-items:baseline;gap:16px;margin-bottom:24px;border-bottom:2px solid var(--ink);padding-bottom:12px;}
 .feed-title{font-family:'Roboto',sans-serif;font-size:22px;font-weight:700;}
 .feed-subtitle{font-size:12px;color:var(--muted);letter-spacing:.05em;}
-.articles-grid{display:grid;grid-template-columns:1fr;gap:0;background:var(--rule);border:1px solid var(--rule);}
-.article-card{background:var(--surface,var(--paper));border:1px solid var(--rule);border-top:none;padding:22px 24px;cursor:default;transition:box-shadow 0.25s,transform 0.25s;border-left:4px solid var(--cat-color,var(--rule));}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.article-card{background:var(--surface,var(--paper));border:1px solid var(--rule);border-top:none;padding:22px 24px;cursor:default;transition:box-shadow 0.25s,transform 0.25s;border-left:4px solid var(--cat-color,var(--rule));position:relative;}
 .article-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.11);transform:translateY(-2px);background:var(--cream);}
 .article-cat-pill{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:2px;margin-bottom:10px;}
 .article-meta-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
@@ -44,7 +44,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 .article-abstract{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
 .read-btn{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:4px 12px;cursor:pointer;background:none;font-family:'Roboto',sans-serif;transition:all .2s;}
 .read-btn:hover{background:var(--ink);color:var(--paper);}
-.cf-panel{margin-top:14px;background:var(--cf-bg);border-left:3px solid var(--cf-border);padding:12px 14px;border-radius:0 4px 4px 0;display:none;}
+.cf-panel{position:absolute;left:0;right:0;z-index:50;margin-top:0;background:var(--cf-bg);border-left:3px solid var(--cf-border);border-top:1px solid var(--cf-border);padding:12px 14px;border-radius:0 0 4px 4px;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .history-item.highlight{animation:histpulse 1.8s ease;}
 @keyframes histpulse{0%{background:#fff8cc;}50%{background:#fff8cc;}100%{background:transparent;}}
 .cf-item.clickable{cursor:pointer;border-radius:3px;transition:background 0.2s;}
