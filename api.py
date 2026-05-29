@@ -673,21 +673,22 @@ class ArticleRequest(BaseModel):
 
 @app.post("/generate/article")
 def generate_article(req: ArticleRequest):
-    prompt = f"""You are a professional news journalist. Write a realistic, engaging news article based on the following information.
+    prompt = f"""You are a staff writer at a major online news outlet. Your editor has given you a headline and summary — expand it into a publishable article.
 
 Title: {req.title}
 Category: {req.category}
 Summary: {req.abstract}
 
-Write 3 short paragraphs (4-5 sentences each) in a professional news style. 
-- Start with a strong opening sentence that hooks the reader
-- Include realistic details, quotes, and context
-- End with a forward-looking sentence
-- Do not include a headline, byline, or date
-- Write in third person
-- Keep it factual and journalistic
-
-Article:"""
+Writing guidelines:
+- Length: 150-300 words depending on the story. Breaking news is shorter. Features and analysis run longer.
+- Structure: vary it. Lead with the most important fact, a scene, a statistic, or a question — whichever fits the story best.
+- Paragraphs: 2 to 4. Not every story needs the same shape.
+- Tone: match the category. Sports can be energetic. Finance should be measured. Health should be clear and calm. News should be direct.
+- Do not repeat the title word-for-word in the opening sentence.
+- Do not invent quotes, names, numbers, or details not in the summary.
+- Do not include a headline, byline, date, or section label.
+- Write in third person.
+- End naturally — not every article needs a forward-looking conclusion. Sometimes the story just ends."""
 
     try:
         client = anthropic.Anthropic()
