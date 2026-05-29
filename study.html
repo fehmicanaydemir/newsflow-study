@@ -1050,21 +1050,9 @@ async function initSession() {
   if(params.get("debug")==="true"){document.getElementById("condition-badge").textContent=labels[STUDY_CONDITION]||`Condition ${STUDY_CONDITION}`;}else{document.getElementById("condition-badge").style.display="none";}
   const hints={A:"These articles were recommended based on your reading history.",B:"These articles were recommended based on your reading history. See why each was recommended below.",C:"You can remove articles from your history using the ✕ button to update your recommendations.",D:"Remove articles from your history to change recommendations. See why each was recommended below."};
   document.getElementById("sidebar-hint").textContent=hints[STUDY_CONDITION]||"";
-  // Use prewarm data if available, otherwise start fresh
-  if (window._prewarmData) {
-    const data = window._prewarmData;
-    sessionId = data.session_id;
-    userIdx = data.user_idx;
-    history = data.history;
-    recs = data.recommendations;
-    explanations = {};
-    renderHistory();
-    renderFeed();
-    setTimeout(() => { document.getElementById("loading").style.display="none"; }, 800);
-    window._prewarmData = null;
-  } else {
-    await startSession();
-  }
+  // Always use startSession -- it fetches explanations properly
+  window._prewarmData = null;
+  await startSession();
 }
 
 async function startSession(){
@@ -1731,7 +1719,7 @@ function submitWarmup() {
     total_articles_shown: warmupShownBatches.length
   });
   // Pre-warm article cache in background while participant reads instructions
-  prewarmArticleCache();
+  // prewarmArticleCache(); // disabled - caused explanation fetch to be skipped
   goToStep(6);
   setupInstructions();
 }
