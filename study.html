@@ -66,8 +66,9 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 .condition-badge{position:fixed;bottom:16px;right:16px;background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;border-radius:2px;opacity:.6;}
 .toast{position:fixed;bottom:60px;right:16px;background:var(--ink);color:var(--paper);font-size:12px;padding:10px 16px;border-radius:3px;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
-.update-bar{background:#e8c84a;color:var(--ink);text-align:center;font-size:12px;padding:8px;font-weight:500;display:none;cursor:pointer;letter-spacing:.05em;}
-.update-bar.visible{display:block;}
+.update-bar{background:linear-gradient(135deg,#e8c84a,#f5a623);color:#1a1a1a;text-align:center;font-size:13px;padding:13px 20px;font-weight:700;display:none;cursor:pointer;letter-spacing:.06em;border-bottom:2px solid #c8a830;box-shadow:0 3px 12px rgba(232,200,74,0.45);position:sticky;top:0;z-index:100;}
+.update-bar.visible{display:block;animation:pulsebar 1.8s ease-in-out infinite;}
+@keyframes pulsebar{0%{box-shadow:0 3px 12px rgba(232,200,74,0.45);}50%{box-shadow:0 3px 24px rgba(232,200,74,0.85);}100%{box-shadow:0 3px 12px rgba(232,200,74,0.45);}}
 .sidebar-hint{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
 .cat-tab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--rule);background:none;cursor:pointer;font-family:'Roboto',sans-serif;transition:all .2s;border-radius:2px;color:var(--muted);}
 .cat-tab:hover{border-color:var(--ink);color:var(--ink);}
@@ -1182,9 +1183,10 @@ function renderFeed(append=false){
       // Strong counterfactuals — show LAST as deepest explanation
       if(strong.length>0){
         parts.push(strong.slice(0,5).map(item=>
-          `<div class="cf-item">
+          `<div class="cf-item clickable" onclick="highlightHistoryItem('${item.article.id}')">
             <span class="cf-icon">🔗</span>
             <span class="cf-text">If you remove <strong>"${item.article.title.substring(0,50)}…"</strong> from your history, this recommendation would disappear.</span>
+            <span style="font-size:10px;color:#8a7a30;margin-left:6px;white-space:nowrap;">→ show in history</span>
           </div>`
         ).join(""));
       }
@@ -1239,7 +1241,11 @@ async function markRead(id, rank) {
   const alreadyInHistory = history.some(h => h.id === id);
   if (!alreadyInHistory) {
     history.unshift({...article, _justRead: true});
+    readDuringSession = readDuringSession || [];
+    readDuringSession.push(id);
     renderHistory();
+    document.getElementById('update-bar').classList.add('visible');
+    document.getElementById('update-bar').textContent = '↻ Your reading history changed. Click here to refresh your feed.';
   }
 
   // Open modal
