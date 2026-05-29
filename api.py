@@ -3,7 +3,8 @@ api.py  —  FastAPI backend for the News Recommender User Study
 Run with:  uvicorn api:app --reload --port 8000
 """
 
-import sys, pickle, json, csv, torch, ollama
+import sys, pickle, json, csv, torch
+import anthropic
 from scipy.sparse import csr_matrix, load_npz, save_npz
 import numpy as np
 import pandas as pd
@@ -689,11 +690,14 @@ Write 3 short paragraphs (4-5 sentences each) in a professional news style.
 Article:"""
 
     try:
-        response = ollama.chat(
-            model="llama3.2",
+        client = anthropic.Anthropic()
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=600,
+            system="You are a professional news journalist writing for a major online news platform. Write realistic, engaging, factual news articles in a clean journalistic style.",
             messages=[{"role": "user", "content": prompt}]
         )
-        article_text = response["message"]["content"].strip()
+        article_text = response.content[0].text.strip()
         return {"text": article_text, "status": "ok"}
     except Exception as e:
         return {"text": req.abstract, "status": "fallback", "error": str(e)}
