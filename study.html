@@ -1234,9 +1234,9 @@ function renderFeed(append=false){
       cfHtml=`<div class="cf-empty">This article matches your general reading interests.</div>`;
     }
     card.innerHTML=`
-      ${isTopRec?'<span class="badge-foryou">✦ Just for you</span>':""}
+      
       ${isNew?'<span class="badge-new">● Just read</span>':""}
-      <div class="article-cat-pill" style="background:${catStyle(article.category).bg};color:${catStyle(article.category).fg}">${article.category}${article.subcategory?" · "+article.subcategory:""}</div>
+      <div class="article-cat-pill" style="background:${catStyle(article.category).bg};color:${catStyle(article.category).fg}">${article.category}${article.subcategory && !article.subcategory.includes("_") ? " · "+article.subcategory : ""}</div>
       <div class="article-meta-row">
         <span class="article-number">№ ${String(globalIdx+1).padStart(2,"0")}</span>
         <span class="article-readtime">⏱ ${readTime(article.abstract)}</span>
