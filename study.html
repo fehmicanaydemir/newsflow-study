@@ -1224,16 +1224,6 @@ function renderFeed(append=false){
         );
       }
 
-      // Soft similarity
-      if(soft.length>0){
-        parts.push(soft.map(item=>
-          `<div class="cf-item">
-            <span class="cf-icon">📰</span>
-            <span class="cf-text">Similar to articles you read: <strong>"${item.article.title.substring(0,50)}…"</strong></span>
-          </div>`
-        ).join(""));
-      }
-
       // Strong counterfactuals — show LAST as deepest explanation
       if(strong.length>0){
         parts.push(strong.slice(0,5).map(item=>
@@ -1390,12 +1380,6 @@ function toggleExplanation(id){
   if(!panel)return;
   panel.classList.toggle('visible');
   logEvent('explanation_viewed',{article_id:id});
-  if(panel.dataset.loaded) return;
-  if(explanations[id]) {
-    const cfHtml = buildCfHtml(explanations[id]);
-    panel.innerHTML = '<div class="cf-panel-title">💡 Why this recommendation?</div>' + cfHtml;
-    panel.dataset.loaded = '1';
-  }
 }
 // Cache for pre-generated articles
 const articleCache = {};
