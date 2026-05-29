@@ -4,6 +4,7 @@ Run with:  uvicorn api:app --reload --port 8000
 """
 
 import sys, pickle, json, csv, torch, ollama
+from scipy.sparse import csr_matrix, load_npz, save_npz
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -80,17 +81,19 @@ def load_with_cache():
     users    = views_df[uid_col].astype(str).unique()
     u2idx    = {u: i for i, u in enumerate(users)}
     n_users  = len(u2idx)
-    train_array = np.zeros((n_users, n_items), dtype=np.float32)
+    rows, cols = [], []
     for row in views_df.itertuples(index=False):
         uid = str(getattr(row, uid_col))
         aid = str(getattr(row, aid_col))
         if uid in u2idx and aid in id2idx:
-            train_array[u2idx[uid], id2idx[aid]] = 1.0
+            rows.append(u2idx[uid]); cols.append(id2idx[aid])
     print(f"  Interaction matrix: {n_users} users x {n_items} items", flush=True)
 
     print("Saving cache...", flush=True)
     os.makedirs("data/processed", exist_ok=True)
     with open(CACHE_FILE, "wb") as f:
+        data = np.ones(len(rows), dtype=np.float32)
+        train_array = csr_matrix((data, (rows, cols)), shape=(n_users, n_items), dtype=np.float32)
         pickle.dump({"key": key, "train_array": train_array, "item_embs": item_embs,
                      "id2idx": id2idx, "idx2id": idx2id}, f, protocol=4)
     print("Cache saved. Future startups will be fast.", flush=True)
@@ -127,7 +130,7 @@ VALID_INDICES = np.array([
 print(f"Valid articles with metadata: {len(VALID_INDICES)} / {len(id2idx)}")
 
 np.random.seed(42)
-valid_users = np.where(train_array.sum(axis=1) >= 8)[0]
+valid_users = np.where(np.asarray(train_array.sum(axis=1)).flatten() >= 8)[0]
 STUDY_USERS = np.random.choice(valid_users, size=min(200, len(valid_users)), replace=False).tolist()
 
 def article_meta(item_idx):
@@ -444,7 +447,7 @@ def start_session(req: SessionRequest):
 
     # Fallback if no warmup selections
     user_idx = int(np.random.choice(STUDY_USERS))
-    user_vec = train_array[user_idx]
+    user_vec = np.asarray(train_array[user_idx]).flatten()
     history_indices = np.where(user_vec > 0)[0]
     history = [article_meta(int(i)) for i in history_indices]
     recs    = recommend(history_indices)
@@ -563,7 +566,7 @@ def match_user(req: MatchRequest):
     best_score = -1
 
     for uid in STUDY_USERS:
-        user_vec = train_array[uid]
+        user_vec = np.asarray(train_array[uid]).flatten()
         history_indices = np.where(user_vec > 0)[0]
         if len(history_indices) == 0:
             continue
@@ -581,7 +584,7 @@ def match_user(req: MatchRequest):
 
         for warmup_id in req.warmup_ids:
             if warmup_id in id2idx:
-                if train_array[uid][id2idx[warmup_id]] > 0:
+                if train_array[uid, id2idx[warmup_id]] > 0:
                     score += 0.1
 
         if score > best_score:
