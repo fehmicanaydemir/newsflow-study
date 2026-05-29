@@ -1076,11 +1076,10 @@ async function startSession(){
     renderHistory();renderFeed();
     // Show loading for 2.5s to allow counterfactuals to generate
     setTimeout(() => { document.getElementById("loading").style.display="none"; }, 2500);
-    // Fetch explanations in background via /explain/batch
+    // Fetch explanations in background for conditions B and D
     setTimeout(async ()=>{
       if(["B","D"].includes(STUDY_CONDITION||CONDITION)){
-        const topIds = recs.slice(0,20).map(r=>r.id);
-        fetch(`${API}/explain/batch`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,article_ids:topIds})})
+        fetch(`${API}/recommend`,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true"},body:JSON.stringify({session_id:sessionId,condition:STUDY_CONDITION||CONDITION,user_idx:userIdx,removed_ids:[]})})
           .then(r=>r.json())
           .then(expData=>{
             explanations=expData.explanations||{};

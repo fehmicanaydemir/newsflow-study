@@ -538,8 +538,12 @@ def get_recommendations(req: RemoveRequest):
                 break
         recs = random_recs
 
-    # Explanations fetched separately via /explain/batch
+    # Generate explanations inline for conditions B and D (top 25 only for speed)
     explanations = {}
+    if req.condition in ("B", "D") and len(active_indices) > 0:
+        active_arr_exp = np.array(active_indices)
+        for rec in recs[:25]:
+            explanations[rec["id"]] = counterfactual_for(active_arr_exp, rec["item_idx"])
 
     empty_history = len(active_indices) == 0
     log_event(req.session_id, req.condition, "recommendations_fetched", {
