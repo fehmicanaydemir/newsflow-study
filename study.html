@@ -478,9 +478,11 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
         <div class="survey-question">
           <label class="survey-label">What is your age?</label>
           <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-            <button type="button" onclick="adjustAge(-1)" style="width:36px;height:36px;border:1px solid var(--rule);background:none;font-size:20px;cursor:pointer;font-family:'Roboto',sans-serif;color:var(--ink)">-</button>
-            <input type="number" id="age-input" name="age" min="18" max="99" placeholder="Age" style="width:80px;padding:8px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:16px;text-align:center;background:var(--paper);color:var(--ink)">
-            <button type="button" onclick="adjustAge(1)" style="width:36px;height:36px;border:1px solid var(--rule);background:none;font-size:20px;cursor:pointer;font-family:'Roboto',sans-serif;color:var(--ink)">+</button>
+            <div style="display:flex;flex-direction:column;border:1px solid var(--rule);">
+              <button type="button" onclick="adjustAge(1)" style="width:32px;height:24px;border:none;border-bottom:1px solid var(--rule);background:none;cursor:pointer;font-size:12px;color:var(--ink);line-height:1;">&#9650;</button>
+              <button type="button" onclick="adjustAge(-1)" style="width:32px;height:24px;border:none;background:none;cursor:pointer;font-size:12px;color:var(--ink);line-height:1;">&#9660;</button>
+            </div>
+            <input type="number" id="age-input" name="age" min="18" max="99" placeholder="18" style="width:70px;padding:8px;border:1px solid var(--rule);font-family:'Roboto',sans-serif;font-size:16px;text-align:center;background:var(--paper);color:var(--ink)">
             <label style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-left:8px">
               <input type="checkbox" id="age-prefer-not" onchange="toggleAgePreferNot()"> Prefer not to say
             </label>
@@ -500,14 +502,14 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
         <div class="survey-question">
           <label class="survey-label">What is your highest level of education? <span style="font-size:11px;color:var(--muted)">(EQF level)</span></label>
           <div class="survey-options">
-            <label class="survey-option"><input type="radio" name="education" value="eqf1"> Primary education</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf2"> Lower secondary education</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf3"> Upper secondary education</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf4"> Post-secondary / vocational education</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf5"> Short-cycle higher education</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf6"> Bachelor's degree</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf7"> Master's degree</label>
-            <label class="survey-option"><input type="radio" name="education" value="eqf8"> Doctoral degree (PhD)</label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf1"> Primary education <span style="font-size:11px;color:var(--muted)">(e.g. primary school)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf2"> Lower secondary education <span style="font-size:11px;color:var(--muted)">(e.g. VMBO, GCSE)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf3"> Upper secondary education <span style="font-size:11px;color:var(--muted)">(e.g. HAVO, VWO, A-levels, MBO 2/3)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf4"> Post-secondary / vocational <span style="font-size:11px;color:var(--muted)">(e.g. MBO 4)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf5"> Short-cycle higher education <span style="font-size:11px;color:var(--muted)">(e.g. HBO associate degree)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf6"> Bachelor's degree <span style="font-size:11px;color:var(--muted)">(e.g. HBO, WO Bachelor, BSc, BA)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf7"> Master's degree <span style="font-size:11px;color:var(--muted)">(e.g. WO Master, MSc, MA)</span></label>
+            <label class="survey-option"><input type="radio" name="education" value="eqf8"> Doctoral degree <span style="font-size:11px;color:var(--muted)">(PhD)</span></label>
           </div>
         </div>
         <div class="survey-question">
