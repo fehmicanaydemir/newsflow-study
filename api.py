@@ -450,7 +450,7 @@ def start_session(req: SessionRequest):
     # Fallback if no warmup selections
     user_idx = int(np.random.choice(STUDY_USERS))
     user_vec = np.asarray(train_array[user_idx]).flatten()
-    history_indices = np.where(user_vec > 0)[0]
+    history_indices = np.where(np.asarray(user_vec).flatten() > 0)[0]
     history = [article_meta(int(i)) for i in history_indices]
     recs    = recommend(history_indices)
     SESSION_STORE[session_id] = {
