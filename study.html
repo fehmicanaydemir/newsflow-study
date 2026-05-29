@@ -476,7 +476,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
 
 <div class="wizard-step" id="step-2">
       <div class="wizard-title">A few quick questions</div>
-      <div class="wizard-subtitle">About you — takes about 1 minute</div>
+      <div class="wizard-subtitle">About you. Takes about 1 minute.</div>
       <div class="wizard-section">
         <div class="survey-question">
           <label class="survey-label">What is your age?</label>
@@ -530,7 +530,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
     <!-- STEP 3: Topic interests -->
     <div class="wizard-step" id="step-3">
       <div class="wizard-title">What do you like to read?</div>
-      <div class="wizard-subtitle">Select all topics that interest you — pick at least 3</div>
+      <div class="wizard-subtitle">Select all topics that interest you. Pick at least 3.</div>
       <div class="wizard-section">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px" id="topic-grid">
           <label class="topic-card" data-cat="news"><span class="topic-icon">🌍</span><span class="topic-label">World News</span></label>
@@ -561,7 +561,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
       <div class="wizard-subtitle">Which of these would you normally click on? Select any that interest you.</div>
       <div class="wizard-section">
         <div id="warmup-articles" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;padding:12px;border:1px solid var(--rule);border-radius:4px;"></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:12px">Please select <strong>at least 10 articles</strong> you would genuinely read. <strong>The more you select, the more personalised and accurate your recommendations will be</strong> — aim for 15 or more if possible. <span id="warmup-count-msg" style="color:var(--accent)"></span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px">Please select <strong>at least 10 articles</strong> you would genuinely read. <strong>The more you select, the more personalised and accurate your recommendations will be.</strong> Aim for 15 or more if possible. <span id="warmup-count-msg" style="color:var(--accent)"></span></div>
         <button class="warmup-refresh-btn" id="warmup-refresh-btn" onclick="refreshWarmupArticles()">
           <span class="warmup-refresh-icon">&#8635;</span>
           <span id="warmup-refresh-label">Show different articles (3 remaining)</span>
@@ -791,7 +791,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
         <div class="wizard-section-title">Retrospective consent</div>
         <p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">
           Now that you know the full purpose of this study, we ask for your consent to use your responses
-          in our research. You are free to withdraw your data — this will have no negative consequences for you.
+          in our research. You are free to withdraw your data. This will have no negative consequences for you.
         </p>
         <div style="display:flex;gap:12px;flex-wrap:wrap">
           <button class="wizard-btn" onclick="giveRetroConsent()" style="background:var(--ink);flex:1;min-width:160px">Yes, you may use my data</button>
@@ -854,7 +854,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
   <div class="masthead-title">News<span>Flow</span></div>
   <div class="masthead-tagline">Your personalised daily briefing</div>
 </header>
-<div class="update-bar" id="update-bar" onclick="refreshFeed()">↻ Your history changed — click to refresh recommendations</div>
+<div class="update-bar" id="update-bar" onclick="refreshFeed()">↻ Your history changed. Click here to refresh your feed.</div>
 <div class="layout">
   <aside class="sidebar">
     <div class="sidebar-section-title">Your Reading History</div>
@@ -1046,7 +1046,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 // Called from wizard startTask()
 async function initSession() {
-  const labels={A:"Condition A — No explanation · No control",B:"Condition B — Counterfactual explanation · No control",C:"Condition C — No explanation · With control",D:"Condition D — Counterfactual explanation · With control"};
+  const labels={A:"Condition A: No explanation, No control",B:"Condition B: Explanation only, No control",C:"Condition C: No explanation, With control",D:"Condition D: Explanation and Control"};
   if(params.get("debug")==="true"){document.getElementById("condition-badge").textContent=labels[STUDY_CONDITION]||`Condition ${STUDY_CONDITION}`;}else{document.getElementById("condition-badge").style.display="none";}
   const hints={A:"These articles were recommended based on your reading history.",B:"These articles were recommended based on your reading history. See why each was recommended below.",C:"You can remove articles from your history using the ✕ button to update your recommendations.",D:"Remove articles from your history to change recommendations. See why each was recommended below."};
   document.getElementById("sidebar-hint").textContent=hints[STUDY_CONDITION]||"";
