@@ -175,7 +175,7 @@ body{font-family:'Roboto',sans-serif;background:var(--paper);color:var(--ink);mi
   background:var(--paper);
   z-index:800;
   display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  align-items:center;justify-content:flex-start;
   padding:40px 20px;
   overflow-y:auto;
 }
@@ -1472,7 +1472,10 @@ async function withdrawRetroConsent() {
 
 function scrollWizardTop() {
   const wiz = document.getElementById('wizard');
-  if (wiz) wiz.scrollTop = 0;
+  if (wiz) { wiz.scrollTop = 0; wiz.scrollTo(0,0); }
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 }
 
 function goToStep(step) {
